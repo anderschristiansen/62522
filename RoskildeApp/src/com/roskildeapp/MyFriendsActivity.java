@@ -18,19 +18,28 @@ import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MyFriendsActivity extends Activity {
+public class MyFriendsActivity extends Activity implements OnClickListener {
 
 	ProgressBar progressBar;
 	ListView listView;
+
+	Button appli, btnSearch;
+	EditText search;
+	TextView searchFriend;
+
 	final List<String> parseUserIdList = new ArrayList<String>();
 	final List<String> parseUserList = new ArrayList<String>();
+	ParseUser parseUser = new ParseUser();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +49,15 @@ public class MyFriendsActivity extends Activity {
 
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		listView = (ListView) findViewById(R.id.lvFriends);
+
+		search = (EditText) findViewById(R.id.etMFSearchName);
+		searchFriend = (TextView) findViewById(R.id.tvMFOtherUser);
+
+		appli = (Button) findViewById(R.id.btnMFAppli);
+		appli.setOnClickListener(this);
+
+		btnSearch = (Button) findViewById(R.id.btnMFSearch);
+		btnSearch.setOnClickListener(this);
 
 		FindFriendsFromCurrentUser();
 	}
@@ -87,7 +105,7 @@ public class MyFriendsActivity extends Activity {
 
 	private void MakeListView(){
 		progressBar.setVisibility(8);
-		
+
 		listView.setAdapter(new ArrayAdapter(this, 
 				R.layout.listview_friends, R.id.lvTvName, parseUserList) {
 			@Override
@@ -108,4 +126,41 @@ public class MyFriendsActivity extends Activity {
 		return true;
 	}
 
+	@Override
+	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.btnMFSearch:
+			String searchName = search.getText().toString().trim();
+			FindUser(searchName);
+
+			break;
+		case R.id.btnMFAppli:
+
+			break;
+		default:
+			break;
+		}
+
+	}
+
+	private void FindUser(String searchName){
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		query.whereContains("username", searchName);
+		query.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> objects, ParseException e) {
+				if (e == null) {
+					parseUser = objects.get(0);
+				} else {
+					parseUser = null;
+				}
+				UpdateName();
+			}
+		});
+	}
+
+	private void UpdateName(){
+		if(parseUser != null){
+			searchFriend.setText(parseUser.getString("username"));
+		}else searchFriend.setVisibility(8);
+	}
 }
