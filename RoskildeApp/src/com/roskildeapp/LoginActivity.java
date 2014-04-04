@@ -24,17 +24,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
 	EditText brugernavn, password;
 	Button login, opretBruger;
-
+	ProgressBar pbar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		Parse.initialize(this, "1PZGZUbJ7AyTkIZTOwMfXxdFRpkbJwo0MoB4J6im", "rkXj2TIHo48jhTXSX9YQthqXYseSSWzUBGT2HoqF");
 
 		brugernavn = (EditText) findViewById(R.id.etBrugernavn);
 		password = (EditText) findViewById(R.id.etPassword);
@@ -45,6 +48,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		opretBruger = (Button) findViewById(R.id.btnOpretBruger);
 		opretBruger.setOnClickListener(this);
 
+		pbar = (ProgressBar) findViewById(R.id.pbarLogin);
+		pbar.setVisibility(8);
 	}
 
 	@Override
@@ -56,7 +61,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View arg0) {
-		Parse.initialize(this, "1PZGZUbJ7AyTkIZTOwMfXxdFRpkbJwo0MoB4J6im", "rkXj2TIHo48jhTXSX9YQthqXYseSSWzUBGT2HoqF");
 
 		String name = brugernavn.getText().toString().trim();
 		String pass = password.getText().toString().trim();
@@ -68,6 +72,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 
 			//login
+			pbar.setVisibility(0);
 			ParseUser.logInInBackground(name, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
 					if (user != null) {
@@ -78,7 +83,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 						TextView tv = new TextView(context);
 						tv.setText("Forkert brugernavn eller password!");
 						d.setContentView(tv);
-						d.show();				
+						d.show();	
+						pbar.setVisibility(8);
 					}
 				}
 			});
@@ -92,7 +98,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			user.setUsername(name);
 			user.setPassword(pass);		
 
-
+			pbar.setVisibility(0);
 			user.signUpInBackground(new SignUpCallback() {
 				public void done(ParseException e) {
 					if (e == null) {

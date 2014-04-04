@@ -29,37 +29,40 @@
             android:text="Søg" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <Button
-            android:id="@+id/btnMFAppli"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="Ansøg" />
-
-        <TextView
-            android:id="@+id/tvMFOtherUser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/btnMFAppli"
-            android:layout_alignBottom="@+id/btnMFAppli"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/progressBar1"
-            android:text="Medium Text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <ProgressBar
             android:id="@+id/progressBar1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" />
+            android:layout_height="wrap_content" />
 
-    </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rlMF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <Button
+                android:id="@+id/btnMFAppli"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="Ansøg" />
+
+            <TextView
+                android:id="@+id/tvMFOtherUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/btnMFAppli"
+                android:layout_alignBottom="@+id/btnMFAppli"
+                android:layout_marginLeft="16dp"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/lvFriends"

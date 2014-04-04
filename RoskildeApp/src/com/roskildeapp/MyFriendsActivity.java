@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MyFriendsActivity extends Activity implements OnClickListener {
@@ -36,9 +37,12 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	Button appli, btnSearch;
 	EditText search;
 	TextView searchFriend;
+	RelativeLayout layout;
 
 	final List<String> parseUserIdList = new ArrayList<String>();
 	final List<String> parseUserList = new ArrayList<String>();
+	final List<String> allParseUserList = new ArrayList<String>();
+
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -59,12 +63,32 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		btnSearch = (Button) findViewById(R.id.btnMFSearch);
 		btnSearch.setOnClickListener(this);
 
+		layout = (RelativeLayout) findViewById(R.id.rlMF);
+		layout.setVisibility(8);
+
 		FindFriendsFromCurrentUser();
+		FindAllUsernames();
+	}
+
+	private void FindAllUsernames() {
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		query.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> users, ParseException e) {
+				if (e == null) {
+					for(int i= 0; i < users.size(); i++){
+						allParseUserList.add((String) users.get(i).get("username"));
+					}
+				} else {
+					System.out.println("fejl i FindAllUsernames");
+				}
+			}		
+		});
 	}
 
 	private void FindFriendsFromCurrentUser() {
 		final ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
+		query.whereEqualTo("friends", true);
 		query.findInBackground(new FindCallback<ParseObject>() {
 			public void done(List<ParseObject> userList, ParseException e) {
 				if (e == null) {
@@ -135,6 +159,12 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 
 			break;
 		case R.id.btnMFAppli:
+			ParseObject newFriend = new ParseObject("Friends");
+			newFriend.put("friendsId1", ParseUser.getCurrentUser().getObjectId());
+			newFriend.put("friendsId2", parseUser.getObjectId());
+			newFriend.put("friends", false);
+			newFriend.saveInBackground();
+			appli.setEnabled(false);
 
 			break;
 		default:
@@ -146,21 +176,36 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	private void FindUser(String searchName){
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.whereContains("username", searchName);
+		progressBar.setVisibility(0);
+
 		query.findInBackground(new FindCallback<ParseUser>() {
 			public void done(List<ParseUser> objects, ParseException e) {
 				if (e == null) {
-					parseUser = objects.get(0);
+					if(objects.size() != 0){
+						parseUser = objects.get(0);
+					}
+					else parseUser = null;
 				} else {
 					parseUser = null;
 				}
 				UpdateName();
+				progressBar.setVisibility(8);
 			}
 		});
 	}
 
+
 	private void UpdateName(){
 		if(parseUser != null){
+			layout.setVisibility(0);
+			for(int i=0; i<allParseUserList.size();i++){
+				if(allParseUserList.get(i).equals(parseUser.get("username"))){
+					appli.setEnabled(false);
+					i=allParseUserList.size();
+				}
+				else appli.setEnabled(true);
+			}
 			searchFriend.setText(parseUser.getString("username"));
-		}else searchFriend.setVisibility(8);
+		}else layout.setVisibility(8);
 	}
 }
