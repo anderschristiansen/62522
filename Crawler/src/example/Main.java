@@ -97,7 +97,7 @@ public class Main {
 			org.jsoup.select.Elements news = newsDoc.select(".container");					
 
 			//System.out.println(news);
-			
+
 			for(Element e : news){
 				System.out.println(e.getElementsByTag("a").first().attr("title"));
 			}
@@ -106,7 +106,7 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 
 		//GET NEW TEXT
 		try {
@@ -117,28 +117,28 @@ public class Main {
 			System.out.println("");
 
 			Document newsDoc = Jsoup.connect("http://roskilde-festival.dk/dk/nyhed/singlenews/the-rolling-stones-indtager-roskilde-festival-2014/").userAgent("Chrome").timeout(30000).get();
-			
+
 			//Header
 			org.jsoup.select.Elements newsHeader = newsDoc.select(".createSingleView_teaser");					
-			
+
 			for(Element e : newsHeader){
 				System.out.println(e.getElementsByTag("div").first().text());
 			}
-			
+
 			//Text
 			org.jsoup.select.Elements newsText = newsDoc.select(".createSingleView_description");					
-			
+
 			for(Element e : newsText){
 				System.out.println(e.getElementsByTag("p").text());
 			}
-			
-			
+
+
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 }
