@@ -15,8 +15,11 @@ import com.parse.ParseUser;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,7 +45,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	final List<String> parseUserIdList = new ArrayList<String>();
 	final List<String> parseUserList = new ArrayList<String>();
 	final List<String> allParseUserList = new ArrayList<String>();
-
+	final List<String> friendRequests = new ArrayList<String>();
+	final List<String> friendRequestIds = new ArrayList<String>();
+	
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -66,10 +71,11 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		layout = (RelativeLayout) findViewById(R.id.rlMF);
 		layout.setVisibility(8);
 
-		FindFriendsFromCurrentUser();
+		FindFriendRequests();
+		// When you want to search for a new friend, we have to load all people from database.
 		FindAllUsernames();
 	}
-
+	
 	private void FindAllUsernames() {
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.findInBackground(new FindCallback<ParseUser>() {
@@ -84,6 +90,29 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			}		
 		});
 	}
+	
+	private void FindFriendRequests(){
+		final ParseUser currentUser = ParseUser.getCurrentUser();
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
+		query.whereEqualTo("friends", false);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			public void done(List<ParseObject> userList, ParseException e) {
+				if (e == null) {
+					for(int i=0; i< userList.size(); i++){
+						if(userList.get(i).get("friendsId1").equals(currentUser.getObjectId())){
+							friendRequests.add(userList.get(i).get("friendsId2").toString());
+							friendRequestIds.add(userList.get(i).getObjectId());
+						}
+					}
+				} else {
+					Log.d("score", "Error: " + e.getMessage());
+				}
+				System.out.println(friendRequests.toString());
+				FindFriendsFromCurrentUser();
+			}
+		});		
+	}
+
 
 	private void FindFriendsFromCurrentUser() {
 		final ParseUser currentUser = ParseUser.getCurrentUser();
@@ -104,6 +133,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				} else {
 					Log.d("score", "Error: " + e.getMessage());
 				}
+				System.out.println(parseUserIdList.toString());
 				FindUsernames();
 			}
 		});		
@@ -207,5 +237,16 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			}
 			searchFriend.setText(parseUser.getString("username"));
 		}else layout.setVisibility(8);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.btnMenuMFRequests){
+			Intent i = new Intent(this,FriendRequestActivity.class);
+			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) friendRequests);
+			i.putStringArrayListExtra("friendRequestIdList", (ArrayList<String>) friendRequestIds);
+			startActivity(i);
+		}
+		return false;
 	}
 }

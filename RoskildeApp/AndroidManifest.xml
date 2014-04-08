@@ -49,6 +49,10 @@
             android:name="com.roskildeapp.MypageActivity"
             android:label="@string/title_activity_mypage" >
         </activity>
+        <activity
+            android:name="com.roskildeapp.FriendRequestActivity"
+            android:label="@string/title_activity_friend_request" >
+        </activity>
     </application>
 
 </manifest>
