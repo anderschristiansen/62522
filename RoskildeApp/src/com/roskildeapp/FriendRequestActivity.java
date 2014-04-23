@@ -6,6 +6,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -39,17 +40,6 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 		listView = (ListView) findViewById(R.id.lvFR);
 		friendUserList = getIntent().getStringArrayListExtra("friendRequestList");
 		friendUserIdList = getIntent().getStringArrayListExtra("friendRequestIdList");
-
-		//		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_friend_invites, R.id.lvFIName, friendUserList) {
-		//			@Override
-		//			public View getView(int position, View cachedView, ViewGroup parent) {
-		//				System.out.println("gjgjhg");
-		//				View view = super.getView(position, cachedView, parent);
-		//				Button yes = (Button) view.findViewById(R.id.lvFIYes);
-		//				Button no = (Button) view.findViewById(R.id.lvFINo);
-		//				return view;
-		//			}
-		//		};
 
 		ArrayAdapter adapter = new ArrayAdapter(this, R.layout.listview_friend_requests, R.id.lvTvFR, friendUserList) {
 			@Override
@@ -98,12 +88,40 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 
 	private void Answer(boolean answer){
 		if(answer){
-			System.out.println("de skal v¾re venner");
 			AcceptFriend();
+			friendUserList.remove(position);
+			friendUserIdList.remove(position);
+			Intent i = new Intent(this,FriendRequestActivity.class);
+			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) friendUserList);
+			i.putStringArrayListExtra("friendRequestIdList", (ArrayList<String>) friendUserIdList);
+			startActivity(i);
+			finish(); 
+
 		}
 		else{
-			System.out.println("Slet anmodning");
+			RejectFriend();
+			friendUserList.remove(position);
+			friendUserIdList.remove(position);
+			Intent i = new Intent(this,FriendRequestActivity.class);
+			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) friendUserList);
+			i.putStringArrayListExtra("friendRequestIdList", (ArrayList<String>) friendUserIdList);
+			startActivity(i);
+			finish();
 		}
+	}
+
+	private void RejectFriend() {
+
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
+		// Retrieve the object by id
+		query.getInBackground(friendUserIdList.get(position), new GetCallback<ParseObject>() {
+			public void done(ParseObject reject, ParseException e) {
+				if (e == null) {
+					reject.deleteInBackground();
+				}
+			} 
+		}); 
+		
 	}
 
 	private void AcceptFriend(){
@@ -117,12 +135,14 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 					friendStatus.saveInBackground();
 				}
 			} 
-		}); restartActivity(this);
+		}); 
 	}
 
-	public static void restartActivity(Activity act){
-
-
-
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(this,MyFriendsActivity.class);
+		startActivity(intent);
+		finish();
 	}
+	
 }

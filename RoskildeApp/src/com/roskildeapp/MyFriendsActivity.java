@@ -42,11 +42,11 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	TextView searchFriend;
 	RelativeLayout layout;
 
-	final List<String> parseUserIdList = new ArrayList<String>();
-	final List<String> parseUserList = new ArrayList<String>();
-	final List<String> allParseUserList = new ArrayList<String>();
-	final List<String> friendRequests = new ArrayList<String>();
-	final List<String> friendRequestIds = new ArrayList<String>();
+	List<String> parseUserIdList = new ArrayList<String>();
+	List<String> parseUserList = new ArrayList<String>();
+	List<String> allParseUserList = new ArrayList<String>();
+	List<String> friendRequests = new ArrayList<String>();
+	List<String> friendRequestIds = new ArrayList<String>();
 	
 	ParseUser parseUser = new ParseUser();
 
@@ -246,7 +246,10 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) friendRequests);
 			i.putStringArrayListExtra("friendRequestIdList", (ArrayList<String>) friendRequestIds);
 			startActivity(i);
+			finish();
 		}
 		return false;
 	}
+	
+	
 }
