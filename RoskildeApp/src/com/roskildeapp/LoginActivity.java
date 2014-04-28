@@ -37,7 +37,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		Parse.initialize(this, "1PZGZUbJ7AyTkIZTOwMfXxdFRpkbJwo0MoB4J6im", "rkXj2TIHo48jhTXSX9YQthqXYseSSWzUBGT2HoqF");
 
 		brugernavn = (EditText) findViewById(R.id.etBrugernavn);
 		password = (EditText) findViewById(R.id.etPassword);
@@ -77,6 +76,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				public void done(ParseUser user, ParseException e) {
 					if (user != null) {
 						startActivity(i);
+						finish();
 					} else {
 						Dialog d = new Dialog(context);
 						d.setTitle("Fejl!");
@@ -103,6 +103,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				public void done(ParseException e) {
 					if (e == null) {
 						startActivity(i);
+						finish();
 					} else {
 						Dialog d = new Dialog(context);
 						d.setTitle("Der skete en fejl!");
@@ -118,7 +119,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Dialog d = new Dialog(context);
 				d.setTitle("Der skete en fejl!");
 				TextView tv = new TextView(context);
-				tv.setText("Fejl: " + e.toString());
+				tv.setText("Hvis du vil oprette en bruger, skal du bare indtaste dit ¿nskede brugernavn og password samme" +
+						" steder, som hvis du skulle logge ind!");
 				d.setContentView(tv);
 				d.show(); 
 			}

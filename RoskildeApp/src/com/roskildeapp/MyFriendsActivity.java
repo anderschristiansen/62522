@@ -45,9 +45,10 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<String> parseUserIdList = new ArrayList<String>();
 	List<String> parseUserList = new ArrayList<String>();
 	List<String> allParseUserList = new ArrayList<String>();
-	List<String> friendRequests = new ArrayList<String>();
+	List<String> IdOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> friendRequestIds = new ArrayList<String>();
-	
+	List<String> userNameOfFriendsWhoMadeRequest = new ArrayList<String>();
+
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -75,7 +76,8 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		// When you want to search for a new friend, we have to load all people from database.
 		FindAllUsernames();
 	}
-	
+
+	// finder alle brugere i databasen.
 	private void FindAllUsernames() {
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.findInBackground(new FindCallback<ParseUser>() {
@@ -90,7 +92,8 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			}		
 		});
 	}
-	
+
+	// finder id'er på nye venneanmodninger, som ikke er besvaret og id på de personer der har lavet anmodningen
 	private void FindFriendRequests(){
 		final ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
@@ -99,21 +102,43 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			public void done(List<ParseObject> userList, ParseException e) {
 				if (e == null) {
 					for(int i=0; i< userList.size(); i++){
-						if(userList.get(i).get("friendsId1").equals(currentUser.getObjectId())){
-							friendRequests.add(userList.get(i).get("friendsId2").toString());
+						if(userList.get(i).get("friendsId2").equals(currentUser.getObjectId())){
+							// Hvem har lavet en anmodning?
+							IdOfFriendsWhoMadeRequest.add(userList.get(i).get("friendsId1").toString());
+							// Id for den ubesvarede venneanmodning
 							friendRequestIds.add(userList.get(i).getObjectId());
 						}
 					}
 				} else {
-					Log.d("score", "Error: " + e.getMessage());
 				}
-				System.out.println(friendRequests.toString());
-				FindFriendsFromCurrentUser();
+				System.out.println(IdOfFriendsWhoMadeRequest.toString());
+				FindNameFromFriendRequests();
+				//TODO: knappen "Anmodninger i topmenuen skal først enables nu.
 			}
 		});		
 	}
 
+	// finder navne på de personer som har lavet en anmodning.
+	private void FindNameFromFriendRequests(){
+		Collection<String> userId = IdOfFriendsWhoMadeRequest;
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		query.whereContainedIn("objectId", userId);
+		query.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> users, ParseException e) {
+				if (e == null) {
+					for(int i= 0; i < users.size(); i++){
+						userNameOfFriendsWhoMadeRequest.add((String) users.get(i).get("username"));
+					}
+				} else {
+					System.out.println("fejl i FindUsernames()");
+				}
+				FindFriendsFromCurrentUser();
+			}		
+		});		
+	}
 
+	
+	// Finder venners id for den person der er logget ind
 	private void FindFriendsFromCurrentUser() {
 		final ParseUser currentUser = ParseUser.getCurrentUser();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Friends");
@@ -139,6 +164,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});		
 	}
 
+	// finder venners brugernavn, for den person der er logget ind
 	private void FindUsernames(){
 		Collection<String> userId = parseUserIdList;
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -157,6 +183,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});
 	}
 
+	// laver listview af venner.
 	private void MakeListView(){
 		progressBar.setVisibility(8);
 
@@ -203,6 +230,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 
 	}
 
+	// søger efter bruger, ud fra bruger input. 
 	private void FindUser(String searchName){
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.whereContains("username", searchName);
@@ -224,13 +252,18 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});
 	}
 
-
+	// viser navnet på en søgt bruger.
 	private void UpdateName(){
 		if(parseUser != null){
 			layout.setVisibility(0);
 			for(int i=0; i<allParseUserList.size();i++){
 				if(allParseUserList.get(i).equals(parseUser.get("username"))){
-					appli.setEnabled(false);
+					for(int ven = 0; ven < parseUserIdList.size();ven++){
+						// Hvis man allerede er ven med den person, kan man ikke ansøge om venskab
+						if(parseUserIdList.get(ven).equals(parseUser.getObjectId())){
+							appli.setEnabled(false);
+						}
+					}
 					i=allParseUserList.size();
 				}
 				else appli.setEnabled(true);
@@ -243,13 +276,13 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.btnMenuMFRequests){
 			Intent i = new Intent(this,FriendRequestActivity.class);
-			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) friendRequests);
+			i.putStringArrayListExtra("friendRequestList", (ArrayList<String>) userNameOfFriendsWhoMadeRequest);
 			i.putStringArrayListExtra("friendRequestIdList", (ArrayList<String>) friendRequestIds);
 			startActivity(i);
 			finish();
 		}
 		return false;
 	}
-	
-	
+
+
 }

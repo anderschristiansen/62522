@@ -12,5 +12,6 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_mypage">MypageActivity</string>
     <string name="title_activity_friend_request">FriendRequestActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
 
 </resources>

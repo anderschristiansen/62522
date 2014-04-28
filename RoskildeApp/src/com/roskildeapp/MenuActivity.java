@@ -64,4 +64,9 @@ public class MenuActivity extends Activity implements OnClickListener{
 		}
 	}
 
+	public void onBackPressed() {
+		Intent intent = new Intent(this,LoginActivity.class);
+		startActivity(intent);
+		finish();
+	}
 }
