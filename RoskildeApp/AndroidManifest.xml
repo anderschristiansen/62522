@@ -58,6 +58,10 @@
             android:name="com.roskildeapp.FriendRequestActivity"
             android:label="@string/title_activity_friend_request" >
         </activity>
+        <activity
+            android:name="com.roskildeapp.RoskildeNewsChosenActivity"
+            android:label="@string/title_activity_roskilde_news_chosen" >
+        </activity>
     </application>
 
 </manifest>
