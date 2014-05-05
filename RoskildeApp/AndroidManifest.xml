@@ -78,6 +78,11 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDhqke6pjhrnxq11P_AKs8wXsVXVxJAsMU" />
+
+        <activity
+            android:name="com.roskildeapp.RoskildeNewsChosenActivity"
+            android:label="@string/title_activity_roskilde_news_chosen" >
+        </activity>
     </application>
 
 </manifest>
