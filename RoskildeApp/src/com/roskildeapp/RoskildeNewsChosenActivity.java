@@ -13,6 +13,12 @@ public class RoskildeNewsChosenActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roskilde_news_chosen);
+		
+		title = (TextView) findViewById(R.id.tvRNCTitle);
+		title.setText(getIntent().getStringExtra("title"));
+		
+		content = (TextView) findViewById(R.id.tvRNCContent);
+		content.setText(getIntent().getStringExtra("content"));
 	}
 
 	@Override

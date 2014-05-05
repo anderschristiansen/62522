@@ -11,15 +11,19 @@ import com.parse.ParseQuery;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-public class RoskildeNewsActivity extends Activity {
+public class RoskildeNewsActivity extends Activity implements OnItemClickListener {
 
 	ListView listView;
 	List<String> newsTitles = new ArrayList<String>();
@@ -32,6 +36,8 @@ public class RoskildeNewsActivity extends Activity {
 		setContentView(R.layout.activity_roskilde_news);
 
 		listView = (ListView) findViewById(R.id.lvNews);
+	    listView.setOnItemClickListener(this);
+		
 		bar = (ProgressBar) findViewById(R.id.pbNews);
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("News");
@@ -57,17 +63,31 @@ public class RoskildeNewsActivity extends Activity {
 
 		}
 		System.out.println(newsTitles.size());
+
 		listView.setAdapter(new ArrayAdapter(this, 
 				R.layout.listview_news, R.id.tvNewsTitle, newsTitles) {
 			@Override
 			public View getView(int position, View cachedView, ViewGroup parent) {
 				View view = super.getView(position, cachedView, parent);
-				TextView listeelem_beskrivelse = (TextView) view.findViewById(R.id.tvNewsTitle);
-				listeelem_beskrivelse.setText(newsTitles.get(position));
+				TextView title = (TextView) view.findViewById(R.id.tvNewsTitle);
+				title.setText(newsTitles.get(position));
+//				TextView date = (TextView) view.findViewById(R.id.);
+//				date.setText(newsTitles.get(position));
 				return view;
 			}
 		});
 	}
+	
+	 public void onItemClick(AdapterView<?> liste, View v, int position, long id) {
+		    Toast.makeText(this, "Klik på " + position, Toast.LENGTH_SHORT).show();
+		    String newsTitle = (String) newsList.get(position).get("title");
+		    String newsContent = (String) newsList.get(position).get("content");
+		    System.out.println("titel: " + newsTitle + ", tekst: " + newsContent);
+		    Intent i = new Intent(this, RoskildeNewsChosenActivity.class);
+		    i.putExtra("title", newsTitle);
+		    i.putExtra("content", newsContent);
+		    startActivity(i);
+	 }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
