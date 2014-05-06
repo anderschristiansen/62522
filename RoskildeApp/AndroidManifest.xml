@@ -32,7 +32,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.roskildeapp.SplashActivity"
-            android:label="@string/title_activity_splash" >
+            android:label="RoskildeApp" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
