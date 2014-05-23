@@ -14,5 +14,7 @@
     <string name="title_activity_friend_request">FriendRequestActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_roskilde_news_chosen">RoskildeNewsChosenActivity</string>
+    <string name="title_activity_band_desciption">BandDesciptionActivity</string>
+    <string name="title_activity_friend_program">FriendProgramActivity</string>
 
 </resources>

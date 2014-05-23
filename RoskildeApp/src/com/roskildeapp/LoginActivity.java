@@ -68,8 +68,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		switch (arg0.getId()) {
 		case R.id.btnLogin:
-
-
+			
 			//login
 			pbar.setVisibility(0);
 			ParseUser.logInInBackground(name, pass, new LogInCallback() {

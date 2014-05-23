@@ -79,7 +79,6 @@ public class RoskildeNewsActivity extends Activity implements OnItemClickListene
 	}
 	
 	 public void onItemClick(AdapterView<?> liste, View v, int position, long id) {
-		    Toast.makeText(this, "Klik på " + position, Toast.LENGTH_SHORT).show();
 		    String newsTitle = (String) newsList.get(position).get("title");
 		    String newsContent = (String) newsList.get(position).get("content");
 		    System.out.println("titel: " + newsTitle + ", tekst: " + newsContent);
