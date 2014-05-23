@@ -15,12 +15,15 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,7 +35,8 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 	List<ParseObject> bandList = new ArrayList<ParseObject>();
 	List<String> bandNames = new ArrayList<String>();
 	List<String> scenes = new ArrayList<String>();
-	List<Date> dates = new ArrayList<Date>();
+	List<String> BandDescription = new ArrayList<String>();
+	List<String> dates = new ArrayList<String>();
 	boolean[] bandPositions;
 	String[] bandsChecked;
 
@@ -51,7 +55,7 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 
 		bar = (ProgressBar) findViewById(R.id.pbProgram);
 
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Bands");
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("bands");
 		query.orderByAscending("date");
 		query.findInBackground(new FindCallback<ParseObject>() {
 			public void done(List<ParseObject> parseBandList, ParseException e) {
@@ -63,6 +67,7 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 				FindUserProgram();
 			}
 		});
+
 	}
 
 	private void FindUserProgram() {
@@ -85,7 +90,7 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 				//						ProgramIdToUpdate = bandsCheckedList.get(0).getObjectId();
 				//					}
 				if (e == null) {
-					System.out.println("Inden");
+
 					bandPositions = new boolean[bandList.size()];
 					bandsChecked = new String[bandList.size()];
 					for(int k = 0; k < bandPositions.length; k++){
@@ -101,16 +106,18 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 							if(bandsCheckedList.get(band).getString("band"+band) != "" || bandsCheckedList.get(band).getString("band"+band) != null){
 								// for alle bands
 								for(int j = 0; j < bandList.size(); j++){
-									// System.out.println(i + ", " + j);
 									String bandName = bandList.get(j).getString("name");
-									System.out.println("name: " + bandName);
-									// hvis 
-									if(bandsCheckedList.get(band).getString("band"+j).equals(bandName)){
-										bandPositions[j] = true;
-										bandsChecked[j] = bandName;
-										System.out.println("band: " + bandName + " er gemt på position: " + j + ": " + bandPositions[j]);
+									//									System.out.println("name: " + bandName);
+									//									System.out.println("skal sammenlignes med: " + bandsCheckedList.get(band).getString("band"+j));
+									for(int i = 0; i < bandList.size(); i++){
+										if(bandsCheckedList.get(band).getString("band"+i) != null){
+											if(bandsCheckedList.get(band).getString("band"+i).equals(bandName)){
+												bandPositions[j] = true;
+												bandsChecked[j] = bandName;
+												System.out.println("band: " + bandName + " er gemt på position: " + j + ": " + bandPositions[j]);
+											}
+										}
 									}
-
 									// else {bandPositions[j] = false;}
 								}
 							}
@@ -127,7 +134,7 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 					d.show();
 				}
 				for (int i = 0; i < bandsChecked.length; i++){
-					System.out.println("bandsChecked: " + bandsChecked[i]);
+					//					System.out.println("bandsChecked: " + bandsChecked[i]);
 				}
 				System.out.println("isFirstTime: " + isFirstTime);
 				MakeList();
@@ -140,8 +147,9 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 		System.out.println(bandList.size());
 		for (int i = 0; i < bandList.size(); i++){
 			bandNames.add((String) bandList.get(i).get("name"));
+			BandDescription.add((String) bandList.get(i).get("description"));
 			scenes.add((String) bandList.get(i).get("scene"));
-			dates.add((Date) bandList.get(i).get("date"));
+			dates.add((String) bandList.get(i).get("date"));
 		}
 
 		if(isFirstTime){	
@@ -175,13 +183,25 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 				scene.setText(scenes.get(position));
 				TextView time = (TextView) view.findViewById(R.id.tvRPTime);
 				time.setText(dates.get(position).toString());
+				ImageView info = (ImageView) view.findViewById(R.id.ivP);
+				info.setTag(position);
+				info.setOnClickListener(new OnClickListener() 
+				{
+					@Override
+					public void onClick(View v) 
+					{
+						int position = Integer.parseInt(v.getTag().toString());
+						GoToBand(position);
+					}
+
+				});
 				//				if(bandsChecked[position] != true){
 				//					view.setBackgroundColor(Color.LTGRAY);
 				//				}
 				//				System.out.println(position);
 				//				System.out.println("bandList.get(position).getString(name): " + bandList.get(position).getString("name"));
 				//				System.out.println("bandsChecked[position]: " + bandsChecked[position]);
-				System.out.println("position: " + position + "bandPositions[position]: " + bandPositions[position]);
+				//				System.out.println("position: " + position + "bandPositions[position]: " + bandPositions[position]);
 				if(bandPositions[position] == true){
 					view.setBackgroundColor(Color.LTGRAY);
 				}
@@ -190,6 +210,13 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 			}
 		});
 		System.out.println("-------------/n ListView er oprettet/n--------------");
+	}
+
+	public void GoToBand(int position) {
+		Intent i = new Intent(this, BandDesciptionActivity.class);
+		i.putExtra("Band", bandNames.get(position));
+		i.putExtra("Description", BandDescription.get(position));
+		startActivity(i);
 	}
 
 	@Override
@@ -201,35 +228,29 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 
 	@Override
 	public void onItemClick(AdapterView<?> liste, View v, int position, long id) {
-		System.out.println("før");
-		for (int i = 0; i < bandsChecked.length; i++){
-			System.out.println("bandsChecked: " + bandsChecked[i]);
-		}
+		System.out.println(liste.getChildCount());
 		if(bandsChecked[position] == ""){
 			bandPositions[position] = true;
+//			liste.getChildAt(i).setBackgroundColor(Color.LTGRAY);
+			liste.getAdapter().getView(position, v, liste).setBackgroundColor(Color.LTGRAY);
 			bandsChecked[position] = bandList.get(position).getString("name");
 		}
 		else {
 			bandsChecked[position] = "";
 			bandPositions[position] = false;
+//			.setBackgroundColor(Color.TRANSPARENT);
+			liste.getAdapter().getView(position, v, liste).setBackgroundColor(Color.TRANSPARENT);
 		}
 
-		System.out.println("efter");
-		for (int i = 0; i < bandsChecked.length; i++){
-			System.out.println("bandsChecked: " + bandsChecked[i]);
-		}
-
-		CheckedBands(liste);
 	}
 
-	private void CheckedBands(AdapterView<?> liste) {
-		for (int i = 0; i < bandList.size(); i++){
-			if(bandPositions[i] == true){
-				liste.getChildAt(i).setBackgroundColor(Color.LTGRAY);
-			}
-			else { liste.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);	}
-		}
-	}
+	//	private void CheckedBands(AdapterView<?> liste, int position) {
+	//		System.out.println(position);
+	//		if(bandPositions[position] == true){
+	//			liste.getChildAt(position).setBackgroundColor(Color.LTGRAY);
+	//		}
+	//		else { liste.getChildAt(position).setBackgroundColor(Color.TRANSPARENT);	}
+	//	}
 
 	public void onBackPressed() {
 		if(isFirstTime){
@@ -242,38 +263,38 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 	}
 
 	private void SaveUserProgram(){
-				try{
-					ParseObject userProgram = new ParseObject("UserProgram");
-					userProgram.put("userId", ParseUser.getCurrentUser().getObjectId());
-					userProgram.put("userName", ParseUser.getCurrentUser().get("username"));
+		try{
+			ParseObject userProgram = new ParseObject("UserProgram");
+			userProgram.put("userId", ParseUser.getCurrentUser().getObjectId());
+			userProgram.put("userName", ParseUser.getCurrentUser().get("username"));
+			for(int i = 0; i < bandList.size(); i++){
+				userProgram.put("band"+i, bandsChecked[i]);
+			}
+			userProgram.saveInBackground();
+		}
+		catch (Exception e) {
+			Dialog d = new Dialog(this);
+			d.setTitle("Der skete en fejl!");
+			TextView tv = new TextView(this);
+			tv.setText("Det blev ikke gemt.");
+			d.setContentView(tv);
+			d.show(); 
+		}
+	}
+
+	private void UpdateUserProgram() {
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
+
+		// Retrieve the object by id
+		query.getInBackground(ProgramIdToUpdate, new GetCallback<ParseObject>() {
+			public void done(ParseObject userProgram, ParseException e) {
+				if (e == null) {
 					for(int i = 0; i < bandList.size(); i++){
 						userProgram.put("band"+i, bandsChecked[i]);
 					}
 					userProgram.saveInBackground();
 				}
-				catch (Exception e) {
-					Dialog d = new Dialog(this);
-					d.setTitle("Der skete en fejl!");
-					TextView tv = new TextView(this);
-					tv.setText("Det blev ikke gemt.");
-					d.setContentView(tv);
-					d.show(); 
-				}
-	}
-
-	private void UpdateUserProgram() {
-				ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
-		
-				// Retrieve the object by id
-				query.getInBackground(ProgramIdToUpdate, new GetCallback<ParseObject>() {
-					public void done(ParseObject userProgram, ParseException e) {
-						if (e == null) {
-							for(int i = 0; i < bandList.size(); i++){
-								userProgram.put("band"+i, bandsChecked[i]);
-							}
-							userProgram.saveInBackground();
-						}
-					}
-				});
+			}
+		});
 	}
 }

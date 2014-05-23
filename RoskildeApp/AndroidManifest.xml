@@ -33,7 +33,6 @@
         <activity
             android:name="com.roskildeapp.SplashActivity"
             android:label="RoskildeApp" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,10 +78,21 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDhqke6pjhrnxq11P_AKs8wXsVXVxJAsMU" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBhY7UqCA4GsW00y0kyCbmkGtc-ICjzDQ0" />
 
         <activity
             android:name="com.roskildeapp.RoskildeNewsChosenActivity"
             android:label="@string/title_activity_roskilde_news_chosen" >
+        </activity>
+        <activity
+            android:name="com.roskildeapp.BandDesciptionActivity"
+            android:label="@string/title_activity_band_desciption" >
+        </activity>
+        <activity
+            android:name="com.roskildeapp.FriendProgramActivity"
+            android:label="@string/title_activity_friend_program" >
         </activity>
     </application>
 

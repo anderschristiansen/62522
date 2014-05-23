@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -48,6 +49,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<String> IdOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> friendRequestIds = new ArrayList<String>();
 	List<String> userNameOfFriendsWhoMadeRequest = new ArrayList<String>();
+	List<String> nameOfFriendsWhoMadeProgram = new ArrayList<String>();
 
 	ParseUser parseUser = new ParseUser();
 
@@ -137,7 +139,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});		
 	}
 
-	
+
 	// Finder venners id for den person der er logget ind
 	private void FindFriendsFromCurrentUser() {
 		final ParseUser currentUser = ParseUser.getCurrentUser();
@@ -178,10 +180,27 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				} else {
 					System.out.println("fejl i FindUsernames()");
 				}
-				MakeListView();
+				FindFriendPrograms();
 			}		
 		});
 	}
+
+	private void FindFriendPrograms(){
+
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
+		query.whereEqualTo("playerName", "Dan Stemkoski");
+		query.findInBackground(new FindCallback<ParseObject>() {
+			public void done(List<ParseObject> scoreList, ParseException e) {
+				if (e == null) {
+
+				} else {
+
+				}
+				MakeListView();
+			}	
+		});
+	}
+
 
 	// laver listview af venner.
 	private void MakeListView(){
@@ -192,12 +211,29 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			@Override
 			public View getView(int position, View cachedView, ViewGroup parent) {
 				View view = super.getView(position, cachedView, parent);
-				TextView listeelem_beskrivelse = (TextView) view.findViewById(R.id.lvTvName);
-				listeelem_beskrivelse.setText(parseUserList.get(position));
+				TextView friendName = (TextView) view.findViewById(R.id.lvTvName);
+				friendName.setText(parseUserList.get(position));
+				ImageButton friendProgram = (ImageButton) view.findViewById(R.id.ibFprogram);
+				friendProgram.setOnClickListener(new OnClickListener() 
+				{
+					@Override
+					public void onClick(View v) 
+					{
+						int position = Integer.parseInt(v.getTag().toString());
+						FriendProgram(position);
+					}
+				});
+
 				return view;
 			}
 		});
 
+	}
+
+	private void FriendProgram(int position) {
+		Intent i = new Intent(this, FriendProgramActivity.class);
+		i.putExtra("FriendName", parseUserList.get(position));
+		startActivity(i);
 	}
 
 	@Override
