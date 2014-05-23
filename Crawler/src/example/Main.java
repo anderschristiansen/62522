@@ -1,105 +1,41 @@
 package example;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+
+import object.Band;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
+import Helpers.Trim;
+
 public class Main {
 
-	static String url = "http://roskilde-festival.dk/dk/musik/bands/";
+	private static ArrayList<String> _urlList = new ArrayList<String>();
+	private static ArrayList<Band> _bandList = new ArrayList<Band>();
 
-	public static void main(String[] args) throws IOException {
 
-		//GET BANDS NAMES
+	public static void main(String[] args) throws IOException, ParseException {
+
+
+		//GET URL FOR EVERY BAND
 		try {
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("BAND NAVNE");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("");
-
-			Document bandDoc = Jsoup.connect("http://roskilde-festival.dk/dk/musik/bands/").userAgent("Chrome").timeout(30000).get();
+			Document bandDoc = Jsoup.connect("http://roskilde-festival.dk/dk/band/singleband/").userAgent("Chrome").timeout(30000).get();
 
 			org.jsoup.select.Elements bands = bandDoc.select(".listdata");
 
 			for(Element e : bands){
-				System.out.println(e.getElementsByTag("a").first().text());
-			}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				Element link = e.select("a").first();
+				String relHref = link.attr("href"); 
 
-		//GET BANDS DESCRIPTION
-		try {
-			System.out.println("");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("BAND BESKRIVELSER");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("");
-
-			Document bandDoc = Jsoup.connect("http://roskilde-festival.dk/dk/musik/bands/").userAgent("Chrome").timeout(30000).get();
-
-			org.jsoup.select.Elements bands = bandDoc.select(".listteaser");
-
-			for(Element e : bands){
-				System.out.println(e.getElementsByTag("div").first().text());
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		//GET SCENE		
-		try {
-			System.out.println("");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("FESTIVAL SCENER");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("");
-
-			Document sceneDoc = Jsoup.connect("http://roskilde-festival.dk/dk/musik/scener/").userAgent("Chrome").timeout(30000).get();
-
-			org.jsoup.select.Elements scenes = sceneDoc.select("#c5736");
-
-			String temp = null;
-
-			for(Element e : scenes){
-				temp = e.getElementsByTag("a").text(); 
-			}			
-
-			String[] strList = temp.split("\\s");
-
-			for (String string : strList) {
-				System.out.println(string);
-			}
-
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		//GET NEW HEADER
-		try {
-			System.out.println("");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("FESTIVAL NYHEDER OVERSKRIFTER");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("");
-
-			Document newsDoc = Jsoup.connect("http://roskilde-festival.dk/dk/nyhed/").userAgent("Chrome").timeout(30000).get();
-
-			org.jsoup.select.Elements news = newsDoc.select(".container");					
-
-			//System.out.println(news);
-
-			for(Element e : news){
-				System.out.println(e.getElementsByTag("a").first().attr("title"));
+				_urlList.add(relHref);
 			}
 
 		} catch (IOException e) {
@@ -108,37 +44,114 @@ public class Main {
 		}
 
 
-		//GET NEW TEXT
-		try {
-			System.out.println("");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("FESTIVAL NYHEDER 1");
-			System.out.println("-----------------------------------------------------------------");
-			System.out.println("");
+		//GET BANDS INFO FROM URL'S
+		if (_urlList != null)
+		{	
+			for (String url : _urlList) {
 
-			Document newsDoc = Jsoup.connect("http://roskilde-festival.dk/dk/nyhed/singlenews/the-rolling-stones-indtager-roskilde-festival-2014/").userAgent("Chrome").timeout(30000).get();
+				try {
 
-			//Header
-			org.jsoup.select.Elements newsHeader = newsDoc.select(".createSingleView_teaser");					
+					//------------------------------------------------------------------------------------------------
+					Document bandDoc = Jsoup.connect(url).userAgent("Chrome").timeout(30000).get();
 
-			for(Element e : newsHeader){
-				System.out.println(e.getElementsByTag("div").first().text());
+					//BAND NAME					
+					String name = "";
+
+					try {
+						name = bandDoc.select(".data").first().select("h3").text();
+						//name = Helpers.Filter.StringFilter(name);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}										
+
+					//BAND DESCRIPTION					
+					String description = "";
+					
+					try {
+						description = bandDoc.select(".description").first().text();
+						//description = Helpers.Filter.StringFilter(description);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}						
+				
+					//BAND DATE AND SCENE					
+					String date = "";
+					String scene = "";
+					
+					try {
+						
+						String info[] = bandDoc.select(".date").first().text().split("-");
+
+						String strDate = info[0].replaceAll("[^0-9.]", "") + info[1];
+
+						strDate = Trim.trimEnd(strDate);				
+
+						date = strDate;
+
+						scene = info[2];
+					} catch (Exception e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}					
+
+
+					//------------------------------------------------------------------------------------------------
+
+					Band newBand = new Band();
+
+					newBand.setName(name);
+					newBand.setDescription(description);
+					newBand.setDate(date);			
+					newBand.setScene(scene);
+
+					//------------------------------------------------------------------------------------------------
+
+					_bandList.add(newBand);
+
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-
-			//Text
-			org.jsoup.select.Elements newsText = newsDoc.select(".createSingleView_description");					
-
-			for(Element e : newsText){
-				System.out.println(e.getElementsByTag("p").text());
-			}
-
-
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 
+		// PRINT TO CONSOLE
+
+		//BandUrl();
+		//BandNames();
+
+		SaveToDB();
 	}
+
+
+	private static void BandUrl(){
+		System.out.println("");
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("BAND NAVNE");
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("");
+
+		for (int i = 0; i < _urlList.size(); i++) {
+
+			System.out.println(_urlList.get(i).toString());
+		}
+	}
+
+	private static void SaveToDB(){
+
+		//db.User.GetUser();
+
+		//db.Band.GetBandNames();
+
+		for (Band band : _bandList) {
+
+			db.BandToDB.SaveBandNames(band);
+		}
+	}	
+
+
 }
