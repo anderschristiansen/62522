@@ -1,15 +1,20 @@
 package com.roskildeapp;
 
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MenuActivity extends Activity implements OnClickListener{
-	Button program, friends, news, map, myPage;
+	Button program, friends, news, map, myPage, gps;
+	LocationManager locationManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +36,16 @@ public class MenuActivity extends Activity implements OnClickListener{
 		myPage = (Button) findViewById(R.id.btnMenuMyPage);
 		myPage.setOnClickListener(this);
 
-
+		gps = (Button) findViewById(R.id.btnGPS);
+		gps.setOnClickListener(this);	
+				
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            gps.setText("GPS: Tændt");
+        }else{
+            gps.setText("GPS: Slukket");
+        }			
 	}
 
 	@Override
@@ -59,9 +73,26 @@ public class MenuActivity extends Activity implements OnClickListener{
 		case R.id.btnMenuMyPage:
 			startActivity(new Intent(this,MypageActivity.class));
 			break;
+		case R.id.btnGPS:			
+			startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 100);
+
 		default:
 			break;
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+		locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+		
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            gps.setText("GPS: Tændt");
+        }else{
+            gps.setText("GPS: Slukket");
+        }
 	}
 
 	public void onBackPressed() {
@@ -69,4 +100,5 @@ public class MenuActivity extends Activity implements OnClickListener{
 		startActivity(intent);
 		finish();
 	}
+	
 }
