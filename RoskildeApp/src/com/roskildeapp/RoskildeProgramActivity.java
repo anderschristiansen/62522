@@ -32,6 +32,8 @@ import android.widget.AdapterView.OnItemClickListener;
 public class RoskildeProgramActivity extends Activity implements OnItemClickListener {
 
 	ListView listView;
+	ProgressBar bar;
+	
 	List<ParseObject> bandList = new ArrayList<ParseObject>();
 	List<String> bandNames = new ArrayList<String>();
 	List<String> scenes = new ArrayList<String>();
@@ -39,8 +41,6 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 	List<String> dates = new ArrayList<String>();
 	boolean[] bandPositions;
 	String[] bandsChecked;
-
-	ProgressBar bar;
 
 	boolean isFirstTime = true;
 	String ProgramIdToUpdate;

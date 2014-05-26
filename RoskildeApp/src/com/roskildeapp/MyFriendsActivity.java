@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.crypto.spec.PSource;
+
 import com.parse.CountCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -50,6 +52,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<String> friendRequestIds = new ArrayList<String>();
 	List<String> userNameOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> nameOfFriendsWhoMadeProgram = new ArrayList<String>();
+	List<Boolean> positionOfFriendsWithProgram = new ArrayList<Boolean>();
 
 	ParseUser parseUser = new ParseUser();
 
@@ -185,22 +188,39 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});
 	}
 
+	// Finder venner som har oprettet et program
 	private void FindFriendPrograms(){
-
+		Collection<String> friendNames = parseUserList;
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
-		query.whereEqualTo("playerName", "Dan Stemkoski");
+		query.whereContainedIn("userName", friendNames);
 		query.findInBackground(new FindCallback<ParseObject>() {
-			public void done(List<ParseObject> scoreList, ParseException e) {
+			public void done(List<ParseObject> names, ParseException e) {
 				if (e == null) {
-
+					for(int i= 0; i < names.size(); i++){
+						System.out.println(names.size());
+						nameOfFriendsWhoMadeProgram.add(names.get(i).getString("userName"));
+					}
+					for(int i = 0; i<nameOfFriendsWhoMadeProgram.size();i++){
+						System.out.println(nameOfFriendsWhoMadeProgram.get(i));
+					}
 				} else {
 
 				}
+				
+				// HŒndterer hvilke venners program der mŒ ses.
+				for(int i = 0; i < parseUserList.size(); i++){
+					for(int j = 0; j < nameOfFriendsWhoMadeProgram.size(); j++){
+						if(parseUserList.get(i).equals(nameOfFriendsWhoMadeProgram.get(j))){
+//							positionOfFriendsWithProgram.add()
+						}
+						else positionOfFriendsWithProgram.add(false);
+					}
+				}
+				
 				MakeListView();
 			}	
 		});
 	}
-
 
 	// laver listview af venner.
 	private void MakeListView(){
@@ -209,30 +229,34 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		listView.setAdapter(new ArrayAdapter(this, 
 				R.layout.listview_friends, R.id.lvTvName, parseUserList) {
 			@Override
-			public View getView(int position, View cachedView, ViewGroup parent) {
+			public View getView(final int position, View cachedView, ViewGroup parent) {
 				View view = super.getView(position, cachedView, parent);
 				TextView friendName = (TextView) view.findViewById(R.id.lvTvName);
 				friendName.setText(parseUserList.get(position));
 				ImageButton friendProgram = (ImageButton) view.findViewById(R.id.ibFprogram);
-				friendProgram.setOnClickListener(new OnClickListener() 
-				{
-					@Override
-					public void onClick(View v) 
+				TextView program = (TextView) view.findViewById(R.id.lvTvFriendsProgram);
+				if(positionOfFriendsWithProgram.get(position)){
+					friendProgram.setOnClickListener(new OnClickListener()
 					{
-						int position = Integer.parseInt(v.getTag().toString());
-						FriendProgram(position);
-					}
-				});
-
+						@Override
+						public void onClick(View v) 
+						{			
+							FriendProgram(parseUserList.get(position));
+						}
+					});
+				}
+				else{
+					program.setVisibility(8);
+					friendProgram.setVisibility(8);
+				}
 				return view;
 			}
 		});
-
 	}
 
-	private void FriendProgram(int position) {
+	private void FriendProgram(String username) {
 		Intent i = new Intent(this, FriendProgramActivity.class);
-		i.putExtra("FriendName", parseUserList.get(position));
+		i.putExtra("FriendName", username);
 		startActivity(i);
 	}
 
