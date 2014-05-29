@@ -6,7 +6,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -46,10 +45,8 @@ public class MapActivity extends Activity {
 			googleMap.setMyLocationEnabled(true);
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-
 			Criteria criteria = new Criteria(); 
 			String provider = locationManager.getBestProvider(criteria, true);
-
 
 			// Getting Current Location
 			Location location = locationManager.getLastKnownLocation(provider);
@@ -98,12 +95,12 @@ public class MapActivity extends Activity {
 					double lng = location.getLongitude();
 					LatLng ll = new LatLng(lat, lng);				
 
-				    Context context = getApplicationContext();
-				    CharSequence text = "Lokation: \nBreddegrad: " + lat + "\nLængdegrad: " + lng;
-				    int duration = Toast.LENGTH_SHORT;
-
-				    Toast toast = Toast.makeText(context, text, duration);
-				    toast.show();
+//				    Context context = getApplicationContext();
+//				    CharSequence text = "Lokation: \nBreddegrad: " + lat + "\nLængdegrad: " + lng;
+//				    int duration = Toast.LENGTH_SHORT;
+//
+//				    Toast toast = Toast.makeText(context, text, duration);
+//				    toast.show();
 
 				}
 
