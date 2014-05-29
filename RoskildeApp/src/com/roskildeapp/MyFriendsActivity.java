@@ -206,17 +206,21 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				} else {
 
 				}
-				
+
 				// Håndterer hvilke venners program der må ses.
 				for(int i = 0; i < parseUserList.size(); i++){
+					boolean answer = false;
 					for(int j = 0; j < nameOfFriendsWhoMadeProgram.size(); j++){
 						if(parseUserList.get(i).equals(nameOfFriendsWhoMadeProgram.get(j))){
-//							positionOfFriendsWithProgram.add()
+							positionOfFriendsWithProgram.add(true);
+							j = nameOfFriendsWhoMadeProgram.size();
+							answer = true;
 						}
-						else positionOfFriendsWithProgram.add(false);
+					}
+					if(!answer){
+						positionOfFriendsWithProgram.add(false);
 					}
 				}
-				
 				MakeListView();
 			}	
 		});
@@ -235,7 +239,10 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				friendName.setText(parseUserList.get(position));
 				ImageButton friendProgram = (ImageButton) view.findViewById(R.id.ibFprogram);
 				TextView program = (TextView) view.findViewById(R.id.lvTvFriendsProgram);
+				System.out.println(position + "," + positionOfFriendsWithProgram.get(position) + ", " + parseUserList.get(position));
 				if(positionOfFriendsWithProgram.get(position)){
+					friendProgram.setVisibility(0);
+					program.setVisibility(0);
 					friendProgram.setOnClickListener(new OnClickListener()
 					{
 						@Override
@@ -287,7 +294,6 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-
 	}
 
 	// søger efter bruger, ud fra bruger input. 
@@ -320,7 +326,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				if(allParseUserList.get(i).equals(parseUser.get("username"))){
 					for(int ven = 0; ven < parseUserIdList.size();ven++){
 						// Hvis man allerede er ven med den person, kan man ikke ansøge om venskab
-						if(parseUserIdList.get(ven).equals(parseUser.getObjectId())){
+						// eller hvis man selv er personen.
+						if(parseUserIdList.get(ven).equals(parseUser.getObjectId()) || 
+								parseUser.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
 							appli.setEnabled(false);
 						}
 					}
@@ -343,6 +351,4 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		}
 		return false;
 	}
-
-
 }

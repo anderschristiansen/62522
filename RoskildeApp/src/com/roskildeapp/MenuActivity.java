@@ -1,11 +1,17 @@
 package com.roskildeapp;
 
+import java.util.ArrayList;
+
+import com.parse.ParseUser;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 
 public class MenuActivity extends Activity implements OnClickListener{
@@ -30,7 +36,6 @@ public class MenuActivity extends Activity implements OnClickListener{
 
 		myPage = (Button) findViewById(R.id.btnMenuMyPage);
 		myPage.setOnClickListener(this);
-
 
 	}
 
@@ -57,7 +62,10 @@ public class MenuActivity extends Activity implements OnClickListener{
 			startActivity(new Intent(this,MapActivity.class));
 			break;
 		case R.id.btnMenuMyPage:
-			startActivity(new Intent(this,MypageActivity.class));
+			Intent i = new Intent(this,MypageActivity.class);
+			i.putExtra("Band", "");
+			startActivity(i);
+			
 			break;
 		default:
 			break;
@@ -65,8 +73,16 @@ public class MenuActivity extends Activity implements OnClickListener{
 	}
 
 	public void onBackPressed() {
-		Intent intent = new Intent(this,LoginActivity.class);
-		startActivity(intent);
 		finish();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.menuSignOut){
+			ParseUser.logOut();
+			startActivity(new Intent(this,LoginActivity.class));
+			finish();
+		}
+		return false;
 	}
 }

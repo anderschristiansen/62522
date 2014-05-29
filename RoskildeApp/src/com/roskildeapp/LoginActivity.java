@@ -32,11 +32,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 	EditText brugernavn, password;
 	Button login, opretBruger;
 	ProgressBar pbar;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+
+		if (ParseUser.getCurrentUser() != null) {
+			Intent i = new Intent(this, MenuActivity.class);
+			startActivity(i);
+			finish();
+		} 
 
 		brugernavn = (EditText) findViewById(R.id.etBrugernavn);
 		password = (EditText) findViewById(R.id.etPassword);
@@ -68,7 +74,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		switch (arg0.getId()) {
 		case R.id.btnLogin:
-			
+
 			//login
 			pbar.setVisibility(0);
 			ParseUser.logInInBackground(name, pass, new LogInCallback() {
@@ -88,31 +94,30 @@ public class LoginActivity extends Activity implements OnClickListener {
 				}
 			});
 
-
 			break;
 		case R.id.btnOpretBruger:
-			
-			try{
-			ParseUser user = new ParseUser();
-			user.setUsername(name);
-			user.setPassword(pass);		
 
-			pbar.setVisibility(0);
-			user.signUpInBackground(new SignUpCallback() {
-				public void done(ParseException e) {
-					if (e == null) {
-						startActivity(i);
-						finish();
-					} else {
-						Dialog d = new Dialog(context);
-						d.setTitle("Der skete en fejl!");
-						TextView tv = new TextView(context);
-						tv.setText("Fejl: " + e.toString());
-						d.setContentView(tv);
-						d.show();
+			try{
+				ParseUser user = new ParseUser();
+				user.setUsername(name);
+				user.setPassword(pass);		
+
+				pbar.setVisibility(0);
+				user.signUpInBackground(new SignUpCallback() {
+					public void done(ParseException e) {
+						if (e == null) {
+							startActivity(i);
+							finish();
+						} else {
+							Dialog d = new Dialog(context);
+							d.setTitle("Der skete en fejl!");
+							TextView tv = new TextView(context);
+							tv.setText("Fejl: " + e.toString());
+							d.setContentView(tv);
+							d.show();
+						}
 					}
-				}
-			});
+				});
 			}
 			catch (Exception e) {
 				Dialog d = new Dialog(context);
