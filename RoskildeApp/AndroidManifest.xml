@@ -83,11 +83,10 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDhqke6pjhrnxq11P_AKs8wXsVXVxJAsMU" />
-        
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBhY7UqCA4GsW00y0kyCbmkGtc-ICjzDQ0" />
-        
+
         <activity
             android:name="com.roskildeapp.RoskildeNewsChosenActivity"
             android:label="@string/title_activity_roskilde_news_chosen" >
@@ -107,6 +106,10 @@
         <activity
             android:name="com.roskildeapp.MyPageFragment"
             android:label="@string/title_activity_bands_fragment" >
+        </activity>
+        <activity
+            android:name="com.roskildeapp.CompasActivity"
+            android:label="@string/title_activity_compas" >
         </activity>
     </application>
 
