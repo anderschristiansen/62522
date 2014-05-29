@@ -98,7 +98,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			user.setPassword(pass);		
 			user.put("GPSActive", false);
 			user.put("longitude", 0);
-			user.put("latitute", 0);
+			user.put("latitude", 0);
 
 			pbar.setVisibility(0);
 			user.signUpInBackground(new SignUpCallback() {
