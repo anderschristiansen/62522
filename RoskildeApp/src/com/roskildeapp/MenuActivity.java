@@ -3,11 +3,14 @@ package com.roskildeapp;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+
 import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.Activity;
@@ -19,11 +22,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MenuActivity extends Activity implements OnClickListener {
-	Button program, friends, news, map, myPage, gps, weather;
-	TextView userName;
+	LinearLayout program, friends, news, map, myPage, gps, weather, compas;
+	TextView gpsText;
 
 	ParseUser user = ParseUser.getCurrentUser();
 
@@ -36,32 +40,32 @@ public class MenuActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 
-		program = (Button) findViewById(R.id.btnMenuProgram);
+		program = (LinearLayout) findViewById(R.id.btnMenuProgram);
 		program.setOnClickListener(this);
 
-		friends = (Button) findViewById(R.id.btnMenuMyFriends);
+		friends = (LinearLayout) findViewById(R.id.btnMenuMyFriends);
 		friends.setOnClickListener(this);
 
-		news = (Button) findViewById(R.id.btnMenuNews);
+		news = (LinearLayout) findViewById(R.id.btnMenuNews);
 		news.setOnClickListener(this);
 
-		map = (Button) findViewById(R.id.btnMenuMap);
+		map = (LinearLayout) findViewById(R.id.btnMenuMap);
 		map.setOnClickListener(this);
 
-		myPage = (Button) findViewById(R.id.btnMenuMyPage);
+		myPage = (LinearLayout) findViewById(R.id.btnMenuMyPage);
 		myPage.setOnClickListener(this);
 		
-		weather = (Button) findViewById(R.id.btnWeather);
+		weather = (LinearLayout) findViewById(R.id.btnWeather);
 		weather.setOnClickListener(this);
 		
-		gps = (Button) findViewById(R.id.btnGPS);
+		compas = (LinearLayout) findViewById(R.id.btnCompas);
+		compas.setOnClickListener(this);
+		
+		gps = (LinearLayout) findViewById(R.id.btnGPS);
 		gps.setOnClickListener(this);	
 
-		// Sets the name for the user that is logged in
-		userName = (TextView) findViewById(R.id.textView1);
-		userName.setText(user.getUsername());
-
-
+		gpsText = (TextView) findViewById(R.id.txtGPS);
+		gpsText.setOnClickListener(this);
 	}
 
 	@Override
@@ -90,10 +94,12 @@ public class MenuActivity extends Activity implements OnClickListener {
 			Intent i = new Intent(this,MypageActivity.class);
 			i.putExtra("Band", "");
 			startActivity(i);
-
 			break;
 		case R.id.btnWeather:
 			startActivity(new Intent(this, WeatherActivity.class));
+			break;
+		case R.id.btnCompas:
+			startActivity(new Intent(this, CompasActivity.class));
 			break;
 		case R.id.btnGPS:			
 			startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 100);	
@@ -109,7 +115,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 		//Check if the GPS is enabled
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 
-			gps.setText("GPS: Tændt");		
+			gpsText.setText("GPS: Tændt");		
 
 			// GPS dialog box
 			Dialog d = new Dialog(this);
@@ -127,7 +133,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 			}
 		}
 		else{
-			gps.setText("GPS: Slukket");		
+			gpsText.setText("GPS: Slukket");		
 		}		
 	}
 
