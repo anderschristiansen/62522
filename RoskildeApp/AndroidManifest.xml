@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="14"
         android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -83,10 +83,6 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDhqke6pjhrnxq11P_AKs8wXsVXVxJAsMU" />
-        
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBhY7UqCA4GsW00y0kyCbmkGtc-ICjzDQ0" />
         
         <activity
             android:name="com.roskildeapp.RoskildeNewsChosenActivity"

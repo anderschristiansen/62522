@@ -19,7 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class MenuActivity extends Activity implements OnClickListener {
-	Button program, friends, news, map, myPage, gps;
+	Button program, friends, news, map, myPage, gps, weather;
 	TextView userName;
 
 	ParseUser user = ParseUser.getCurrentUser();
@@ -47,7 +47,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 		myPage = (Button) findViewById(R.id.btnMenuMyPage);
 		myPage.setOnClickListener(this);
-
+		
+		weather = (Button) findViewById(R.id.btnWeather);
+		weather.setOnClickListener(this);
+		
 		gps = (Button) findViewById(R.id.btnGPS);
 		gps.setOnClickListener(this);	
 
@@ -81,8 +84,11 @@ public class MenuActivity extends Activity implements OnClickListener {
 		case R.id.btnMenuMyPage:
 			startActivity(new Intent(this,MypageActivity.class));
 			break;
+		case R.id.btnWeather:
+			startActivity(new Intent(this, WeatherActivity.class));
+			break;
 		case R.id.btnGPS:			
-			startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 100);
+			startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 100);	
 		default:
 			break;
 		}

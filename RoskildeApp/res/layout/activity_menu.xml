@@ -62,11 +62,17 @@
         android:layout_height="wrap_content"
         android:text="Min side" />
 
+    <Button
+        android:id="@+id/btnWeather"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vejret" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" 
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/btnGPS"
@@ -74,7 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:text="" />
-       
     </LinearLayout>
 
 </LinearLayout>
