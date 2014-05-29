@@ -7,14 +7,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
+import java.util.ArrayList;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -54,6 +57,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 		// Sets the name for the user that is logged in
 		userName = (TextView) findViewById(R.id.textView1);
 		userName.setText(user.getUsername());
+
+
 	}
 
 	@Override
@@ -79,7 +84,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 			startActivity(new Intent(this,MapActivity.class));
 			break;
 		case R.id.btnMenuMyPage:
-			startActivity(new Intent(this,MypageActivity.class));
+			Intent i = new Intent(this,MypageActivity.class);
+			i.putExtra("Band", "");
+			startActivity(i);
+
 			break;
 		case R.id.btnGPS:			
 			startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 100);
@@ -126,8 +134,6 @@ public class MenuActivity extends Activity implements OnClickListener {
 	}	
 
 	public void onBackPressed() {
-		Intent intent = new Intent(this,LoginActivity.class);
-		startActivity(intent);
 		finish();
 	}
 
@@ -141,7 +147,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 		@Override
 		public void onPreExecute() {
-			
+
 			gpsListener = new GpsListener();
 			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
@@ -216,6 +222,16 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 			}
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == R.id.menuSignOut){
+			ParseUser.logOut();
+			startActivity(new Intent(this,LoginActivity.class));
+			finish();
+		}
+		return false;
 	}
 }
 

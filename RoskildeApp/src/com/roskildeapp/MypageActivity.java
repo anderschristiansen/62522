@@ -3,16 +3,17 @@ package com.roskildeapp;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
+import android.support.v4.app.FragmentActivity;
 
-public class MypageActivity extends Activity {
+public class MypageActivity extends FragmentActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mypage);
 		
-		String band = getIntent().getExtras().getString("Band");
-		System.out.println(band);
+//		String band = getIntent().getExtras().getString("Band");
+//		System.out.println(band);
 	}
 
 	@Override

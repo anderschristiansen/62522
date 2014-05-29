@@ -63,7 +63,7 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	public void onItemClick(AdapterView<?> 	arg0, View arg1, int arg2, long arg3) {
 		AlertDialog.Builder builderCancel = new AlertDialog.Builder(this);
 		builderCancel.setMessage("Vil du v¾re venner med " + friendUserList.get(arg2) +
 				"?").setPositiveButton("Ja", dialogClickListener)
