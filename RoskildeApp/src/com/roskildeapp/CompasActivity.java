@@ -31,7 +31,7 @@ public class CompasActivity extends Activity implements SensorEventListener  {
 		setContentView(R.layout.activity_compas);
 		
 		 // our compass image 
-        image = (ImageView) findViewById(R.id.imageView1);
+        image = (ImageView) findViewById(R.id.vinylImageView);
  
         // TextView that will tell the user what degree is he heading
         tvHeading = (TextView) findViewById(R.id.textView1);
@@ -70,7 +70,7 @@ public class CompasActivity extends Activity implements SensorEventListener  {
         // get the angle around the z-axis rotated
         float degree = Math.round(event.values[0]);
  
-        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        tvHeading.setText(Float.toString(degree) + " grad");
  
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
