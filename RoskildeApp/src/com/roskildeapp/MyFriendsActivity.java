@@ -16,8 +16,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +63,11 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_friends);
 		System.out.println("test");
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
 		listView = (ListView) findViewById(R.id.lvFriends);
 
@@ -80,6 +86,11 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		FindFriendRequests();
 		// When you want to search for a new friend, we have to load all people from database.
 		FindAllUsernames();
+	}
+	
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
 	}
 
 	// finder alle brugere i databasen.

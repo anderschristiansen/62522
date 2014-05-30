@@ -10,8 +10,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,12 @@ public class RoskildeNewsActivity extends Activity implements OnItemClickListene
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roskilde_news);
 
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
 		listView = (ListView) findViewById(R.id.lvNews);
 	    listView.setOnItemClickListener(this);
 		
@@ -55,6 +63,11 @@ public class RoskildeNewsActivity extends Activity implements OnItemClickListene
 		});
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
 	private void makeList() {
 		bar.setVisibility(8);
 		System.out.println(newsList.size());

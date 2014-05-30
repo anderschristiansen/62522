@@ -19,5 +19,6 @@
     <string name="title_activity_weather">WeatherActivity</string>
     <string name="title_activity_bands_fragment">BandsFragment</string>
     <string name="title_activity_compas">CompasActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

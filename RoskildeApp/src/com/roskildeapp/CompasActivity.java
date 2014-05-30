@@ -5,8 +5,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.view.Menu;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -30,6 +33,13 @@ public class CompasActivity extends Activity implements SensorEventListener  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_compas);
 		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+
+		
 		 // our compass image 
         image = (ImageView) findViewById(R.id.imageView1);
  
@@ -40,6 +50,11 @@ public class CompasActivity extends Activity implements SensorEventListener  {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

@@ -3,6 +3,7 @@ package com.roskildeapp;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.roskildeapp.R.color;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,9 +14,14 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
+import android.renderscript.Sampler.Value;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +46,12 @@ public class MenuActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+
 		program = (LinearLayout) findViewById(R.id.btnMenuProgram);
 		program.setOnClickListener(this);
 
@@ -54,18 +66,22 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 		myPage = (LinearLayout) findViewById(R.id.btnMenuMyPage);
 		myPage.setOnClickListener(this);
-		
+
 		weather = (LinearLayout) findViewById(R.id.btnWeather);
 		weather.setOnClickListener(this);
-		
+
 		compas = (LinearLayout) findViewById(R.id.btnCompas);
 		compas.setOnClickListener(this);
-		
+
 		gps = (LinearLayout) findViewById(R.id.btnGPS);
 		gps.setOnClickListener(this);	
 
 		gpsText = (TextView) findViewById(R.id.txtGPS);
 		gpsText.setOnClickListener(this);
+	}
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
 	}
 
 	@Override
@@ -235,12 +251,16 @@ public class MenuActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.menuSignOut){
 			ParseUser.logOut();
 			startActivity(new Intent(this,LoginActivity.class));
+			finish();
+		}
+		if(item.getItemId() == R.id.action_settings){
+			startActivity(new Intent(this, SettingsActivity.class));
 			finish();
 		}
 		return false;

@@ -9,9 +9,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.view.Menu;
@@ -37,6 +39,13 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_request);
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
 		listView = (ListView) findViewById(R.id.lvFR);
 		friendUserList = getIntent().getStringArrayListExtra("friendRequestList");
 		friendUserIdList = getIntent().getStringArrayListExtra("friendRequestIdList");
@@ -55,6 +64,11 @@ public class FriendRequestActivity extends Activity implements OnItemClickListen
 		progressBar.setVisibility(8);
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

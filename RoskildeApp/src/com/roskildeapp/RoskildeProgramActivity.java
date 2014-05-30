@@ -12,10 +12,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
@@ -50,6 +52,12 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_roskilde_program);
 
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
 		listView = (ListView) findViewById(R.id.lvRP);
 		listView.setOnItemClickListener(this);
 
@@ -70,6 +78,13 @@ public class RoskildeProgramActivity extends Activity implements OnItemClickList
 
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
+	
+	
 	private void FindUserProgram() {
 		final Context context = this;
 		System.out.println(context);
