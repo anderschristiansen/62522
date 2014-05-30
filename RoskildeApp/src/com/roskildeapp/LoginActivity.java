@@ -14,10 +14,12 @@ import com.roskildeapp.database.DatabaseHandler;
 import com.roskildeapp.objects.User;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -38,6 +40,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
 		if (ParseUser.getCurrentUser() != null) {
 			Intent i = new Intent(this, MenuActivity.class);
 			startActivity(i);
@@ -57,6 +65,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 		pbar.setVisibility(8);
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

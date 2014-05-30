@@ -1,45 +1,59 @@
 package com.roskildeapp;
 
+import com.parse.Parse;
+
 import android.os.Bundle;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 
 
-public class MypageActivity extends FragmentActivity {
+public class MypageActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mypage);
 
-		//		String band = getIntent().getExtras().getString("Band");
-		//		System.out.println(band);
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction ft = fm.beginTransaction();
+		
+		FragmentInfo infoFragment = new FragmentInfo();
+		ft.add(R.id.fragment_place, infoFragment);
+		ft.commit();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.mypage, menu);
-		return true;
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
 	}
-
+	
 	public void selectFrag(View view) {
-		Fragment fr;
-		if(view == findViewById(R.id.button2)) {
-			fr = new FragmentMap();
+		Fragment frAdd;
+		if(view == findViewById(R.id.btnMPinfo)) {
+			frAdd = new FragmentInfo();
 		}else {
-			fr = new FragmentProgram();
+			frAdd = new FragmentProgram();
 
 		}
-		FragmentManager fm = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fm.beginTransaction();
-		fragmentTransaction.replace(R.id.fragment_place, fr);
+		FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+		fragmentTransaction.replace(R.id.fragment_place, frAdd);
+		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		fragmentTransaction.commit();
 	}
 

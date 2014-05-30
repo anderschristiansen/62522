@@ -9,8 +9,10 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
@@ -45,6 +47,12 @@ public class FriendProgramActivity extends Activity implements OnItemClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_program);
 
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+		
 		listView = (ListView) findViewById(R.id.lvRFP);
 		listView.setOnItemClickListener(this);
 
@@ -65,6 +73,11 @@ public class FriendProgramActivity extends Activity implements OnItemClickListen
 
 	}
 
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
+	}
+	
 	public void getBandsFromFriend(){
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
 		query.whereContains("userName", getIntent().getStringExtra("FriendName"));

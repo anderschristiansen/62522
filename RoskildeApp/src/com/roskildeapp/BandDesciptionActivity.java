@@ -1,8 +1,11 @@
 package com.roskildeapp;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.view.Menu;
+import android.view.View;
 import android.widget.TextView;
 
 public class BandDesciptionActivity extends Activity {
@@ -18,6 +21,18 @@ public class BandDesciptionActivity extends Activity {
 		band.setText((String) getIntent().getExtras().get("Band"));
 		desc = (TextView) findViewById(R.id.tvBDdesc);
 		desc.setText((String) getIntent().getExtras().get("Description"));
+		
+		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		if(settings.getBoolean("skift tema", true)){
+			setActivityBackgroundRecource(R.color.orange);
+		}
+
+	}
+	
+	public void setActivityBackgroundRecource(int color) {
+		View view = this.getWindow().getDecorView();
+		view.setBackgroundResource(color);
 	}
 
 	@Override
