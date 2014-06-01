@@ -15,7 +15,6 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
-		PreferenceManager.getDefaultSharedPreferences(this).getBoolean("Skift tema", false);
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
