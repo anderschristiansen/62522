@@ -15,13 +15,13 @@ public class SettingsActivity extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.layout.activity_settings);
+
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(settings.getBoolean("skift tema", true)){
 			setActivityBackgroundRecource(R.color.orange);
 		}
 		
-		PreferenceManager.getDefaultSharedPreferences(this).getBoolean("Skift tema", false);
 	}
 
 	@Override

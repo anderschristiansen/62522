@@ -63,7 +63,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<ParseUser> friendsWhoHaveGPS = new ArrayList<ParseUser>();
 	List<Boolean> positionOfFriendsWithGPS = new ArrayList<Boolean>();
 
-	
+
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -95,7 +95,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		// When you want to search for a new friend, we have to load all people from database.
 		FindAllUsernames();
 	}
-	
+
 	public void setActivityBackgroundRecource(int color) {
 		View view = this.getWindow().getDecorView();
 		view.setBackgroundResource(color);
@@ -241,7 +241,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 						positionOfFriendsWithProgram.add(false);
 					}
 				}
-				
+
 				//Håndterer hvilke venners GPS position der må ses
 
 				Calendar calendar =Calendar.getInstance() ;
@@ -250,7 +250,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				for(int k = 0; k<parseUserList.size();k++){
 					System.out.println(date + ", " + parseUserList.get(k).getUpdatedAt());
 					if(date.before(parseUserList.get(k).getUpdatedAt())){
-						friendsWhoHaveGPS.add(parseUserList.get(k));
+						if(!(parseUserList.get(k).getDouble("latitude") == 0)){
+							friendsWhoHaveGPS.add(parseUserList.get(k));
+						}
 					}
 				}
 				for(int l = 0; l<parseUserList.size(); l++){
@@ -266,9 +268,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 						positionOfFriendsWithGPS.add(false);
 					}
 				}
-				
+
 				System.out.println(positionOfFriendsWithGPS);
-				
+
 				MakeListView();
 			}	
 		});
@@ -303,10 +305,10 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 					program.setVisibility(8);
 					friendProgram.setVisibility(8);
 				}
-				
+
 				ImageButton friendMap = (ImageButton) view.findViewById(R.id.ibFmap);
 				TextView map = (TextView) view.findViewById(R.id.lvTvFriendsMap);
-				
+
 				if(positionOfFriendsWithGPS.get(position)){
 					friendMap.setVisibility(0);
 					map.setVisibility(0);
@@ -334,7 +336,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		startActivity(i);
 	}
 	private void FriendMap(ParseUser friend) {
-		
+
 		Intent i = new Intent(this, MapActivity.class);
 		i.putExtra("username", friend.getString("username"));
 		i.putExtra("latitude", friend.getDouble("latitude"));
@@ -343,9 +345,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		String date = df.format(friend.getUpdatedAt());
 		i.putExtra("updated", date);
 		startActivity(i);
-		
+
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
