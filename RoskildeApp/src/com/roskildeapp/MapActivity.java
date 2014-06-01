@@ -19,19 +19,21 @@ import android.widget.Toast;
 public class MapActivity extends Activity {
 
 	GoogleMap googleMap;
+	double latitude;
+	double longitude;
+	String username;
+	String date;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
-		String username = getIntent().getStringExtra("username");
-		double latitude = getIntent().getDoubleExtra("latitude", 0);
-		double longitude = getIntent().getDoubleExtra("longitude", 0);
-		String date = getIntent().getStringExtra("updated");
-		
-		System.out.println("username: " + username + ", latitude: " + latitude + ", longitude; " + longitude + ", date: " + date);
-		
+		username = getIntent().getStringExtra("username");
+		latitude = getIntent().getDoubleExtra("latitude", 0);
+		longitude = getIntent().getDoubleExtra("longitude", 0);
+		date = getIntent().getStringExtra("updated");
+
 		try {
 			// Loading map
 			initilizeMap();
@@ -42,27 +44,27 @@ public class MapActivity extends Activity {
 	}
 
 	private void initilizeMap() {
-		
+
 		GpsListener gpsListener;
-		
+
 		if (googleMap == null) {
 			googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 			googleMap.setMyLocationEnabled(true);
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
 			gpsListener = new GpsListener();
-			
+
 			Criteria criteria = new Criteria(); 
 			String provider = locationManager.getBestProvider(criteria, true);
 
 			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
 			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
-			
+
 			// Getting Current Location
 			Location location = locationManager.getLastKnownLocation(provider);	
-			
+
 			if(location == null){
-		
+
 				Log.d("APpln", "location: >>"+location);
 				locationManager.requestLocationUpdates(provider, 20000, 0, gpsListener);
 
@@ -73,11 +75,14 @@ public class MapActivity extends Activity {
 				LatLng ll = new LatLng(lat, lng);
 
 				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));
-				
-				this.googleMap.addMarker(new MarkerOptions().position(new LatLng(55.75571805, 12.52080712)).title("userName").snippet("createdTime"));
-			}  
 
-			
+				if (username != null)
+				{
+					this.googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(username).snippet(date));
+				}  
+			}
+
+
 			// check if map is created successfully or not
 			if (googleMap == null) {
 
@@ -89,9 +94,9 @@ public class MapActivity extends Activity {
 				toast.show();
 			}
 		}
-		
+
 	}
-	
+
 	public class GpsListener implements LocationListener {
 
 		@Override
@@ -99,7 +104,7 @@ public class MapActivity extends Activity {
 			double lat= location.getLatitude();
 			double lng = location.getLongitude();
 			LatLng ll = new LatLng(lat, lng);
-			googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));     				
+			//googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));     				
 		}
 
 		@Override

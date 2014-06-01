@@ -1,5 +1,7 @@
 package com.roskildeapp;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -337,7 +339,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		i.putExtra("username", friend.getString("username"));
 		i.putExtra("latitude", friend.getDouble("latitude"));
 		i.putExtra("longitude", friend.getDouble("longitude"));
-		i.putExtra("updated", friend.getUpdatedAt());
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		String date = df.format(friend.getUpdatedAt());
+		i.putExtra("updated", date);
 		startActivity(i);
 		
 	}

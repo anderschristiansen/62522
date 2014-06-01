@@ -34,9 +34,7 @@ import android.widget.TextView;
 public class MenuActivity extends Activity implements OnClickListener {
 	LinearLayout program, friends, news, map, myPage, gps, weather, compas;
 	TextView gpsText;
-
-	ParseUser user = ParseUser.getCurrentUser();
-
+	
 	Location location;
 	LocationManager locationManager;
 	FetchCoordinates asyncTask;
@@ -184,7 +182,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 		@Override
 		protected Void doInBackground(String...params) {
 
-			while(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true) {
+			while(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true ||
+					locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) == true) {
 
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
 
@@ -192,6 +191,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 				if (lati != 0.0 && longi != 0.0)
 				{
+					final ParseUser user = ParseUser.getCurrentUser();
+
 					if (user != null)
 					{
 						user.put("GPSActive", true);
@@ -211,7 +212,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 					}
 				}
 
-				SystemClock.sleep(60000*10);
+				//SystemClock.sleep(60000*10);
+				SystemClock.sleep(10000);
 
 			}
 			return null;
@@ -255,6 +257,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.menuSignOut){
+			asyncTask.cancel(true);
 			ParseUser.logOut();
 			startActivity(new Intent(this,LoginActivity.class));
 			finish();
