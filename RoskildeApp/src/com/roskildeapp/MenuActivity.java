@@ -199,7 +199,6 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 					if (user != null)
 					{
-						user.put("GPSActive", true);
 						user.put("longitude", longi);
 						user.put("latitude", lati);
 						user.saveInBackground(new SaveCallback() {

@@ -17,14 +17,10 @@ import android.widget.TextView;
 
 public class CompasActivity extends Activity implements SensorEventListener  {
 
-	// define the display assembly compass picture
     private ImageView image;
- 
-    // record the compass picture angle turned
     private float currentDegree = 0f;
  
-    // device sensor manager
-    private SensorManager mSensorManager;
+    private SensorManager sensorManager;
  
     TextView tvHeading;
 
@@ -39,15 +35,12 @@ public class CompasActivity extends Activity implements SensorEventListener  {
 			setActivityBackgroundRecource(R.color.orange);
 		}
 
-		
-		 // our compass image 
         image = (ImageView) findViewById(R.id.vinylImageView);
  
-        // TextView that will tell the user what degree is he heading
         tvHeading = (TextView) findViewById(R.id.textView1);
  
-        // initialize your android device sensor capabilities
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        // initialize the android device sensor capabilities
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 	}
 
 	public void setActivityBackgroundRecource(int color) {
@@ -62,12 +55,13 @@ public class CompasActivity extends Activity implements SensorEventListener  {
 		return true;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
     protected void onResume() {
         super.onResume();
          
-        // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+        // register the listener for the sensor
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_GAME);
     }
  
@@ -75,19 +69,19 @@ public class CompasActivity extends Activity implements SensorEventListener  {
     protected void onPause() {
         super.onPause();
          
-        // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
+        // this stops the listener and saves battery for the device
+        sensorManager.unregisterListener(this);
     }
  
     @Override
     public void onSensorChanged(SensorEvent event) {
  
-        // get the angle around the z-axis rotated
+        // gets the degree of the angle
         float degree = Math.round(event.values[0]);
  
         tvHeading.setText(Float.toString(degree) + " grad");
  
-        // create a rotation animation (reverse turn degree degrees)
+        // Rotate animation for the compas
         RotateAnimation ra = new RotateAnimation(
                 currentDegree, 
                 -degree,
@@ -95,13 +89,12 @@ public class CompasActivity extends Activity implements SensorEventListener  {
                 Animation.RELATIVE_TO_SELF,
                 0.5f);
  
-        // how long the animation will take place
+        // animation duration
         ra.setDuration(210);
  
         // set the animation after the end of the reservation status
         ra.setFillAfter(true);
  
-        // Start the animation
         image.startAnimation(ra);
         currentDegree = -degree;
  
@@ -109,7 +102,6 @@ public class CompasActivity extends Activity implements SensorEventListener  {
  
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // not in use
     }
 
 }

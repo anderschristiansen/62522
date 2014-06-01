@@ -6,10 +6,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
 import object.Band;
 import object.News;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -229,7 +227,6 @@ public class Main {
 	private static void SaveToDB(){
 
 		//db.User.GetUser();
-
 		//db.Band.GetBandNames();
 
 		for (Band band : _bandList) {

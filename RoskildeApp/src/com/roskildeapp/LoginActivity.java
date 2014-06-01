@@ -114,7 +114,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				ParseUser user = new ParseUser();
 				user.setUsername(name);
 				user.setPassword(pass);		
-				user.put("GPSActive", false);
 				user.put("longitude", 0);
 				user.put("latitude", 0);
 				
