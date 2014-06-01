@@ -26,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -46,6 +47,9 @@ public class MenuActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_menu);
 
+		setTitle(ParseUser.getCurrentUser().getUsername());
+		setTitleColor(Color.BLUE);
+		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(settings.getBoolean("skift tema", true)){
