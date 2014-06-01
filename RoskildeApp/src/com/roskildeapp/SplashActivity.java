@@ -4,12 +4,13 @@ import com.parse.Parse;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 
-public class SplashActivity extends Activity implements Runnable {
+public class SplashActivity extends Activity  implements Runnable {
 
 	Handler handler = new Handler();
 	static SplashActivity aktivitetDerVisesNu = null;
@@ -19,8 +20,6 @@ public class SplashActivity extends Activity implements Runnable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		Parse.initialize(this, "1PZGZUbJ7AyTkIZTOwMfXxdFRpkbJwo0MoB4J6im", "rkXj2TIHo48jhTXSX9YQthqXYseSSWzUBGT2HoqF");
-		PreferenceManager.getDefaultSharedPreferences(this).getBoolean("Skift tema", false);
-
 		
 		System.out.println(getClass().getSimpleName() + ": aktiviteten blev startet!");
 

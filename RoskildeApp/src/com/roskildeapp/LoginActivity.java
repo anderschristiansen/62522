@@ -41,6 +41,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_login);
 
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+		PreferenceManager.getDefaultSharedPreferences(this).getBoolean("Skift tema", false);
 
 		if(settings.getBoolean("skift tema", true)){
 			setActivityBackgroundRecource(R.color.orange);

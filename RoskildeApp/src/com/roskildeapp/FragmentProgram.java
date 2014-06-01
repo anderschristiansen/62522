@@ -10,6 +10,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -76,8 +77,8 @@ public class FragmentProgram extends Fragment{
 		
 		return v;
 	}
-	
-	
+
+
 	public void getBandsFromFriend(){
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
 		query.whereContains("userId", ParseUser.getCurrentUser().getObjectId());
