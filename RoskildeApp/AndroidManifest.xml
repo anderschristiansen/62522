@@ -41,39 +41,39 @@
         </activity>
         <activity
             android:name="com.roskildeapp.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="Login" >
         </activity>
         <activity
             android:name="com.roskildeapp.MenuActivity"
-            android:label="@string/title_activity_my_page" >
+            android:label="Menu" >
         </activity>
         <activity
             android:name="com.roskildeapp.RoskildeProgramActivity"
-            android:label="@string/title_activity_roskilde_program" >
+            android:label="Program" >
         </activity>
         <activity
             android:name="com.roskildeapp.MyFriendsActivity"
-            android:label="@string/title_activity_my_friends" >
+            android:label="Venner" >
         </activity>
         <activity
             android:name="com.roskildeapp.RoskildeNewsActivity"
-            android:label="@string/title_activity_roskilde_news" >
+            android:label="Nyheder" >
         </activity>
         <activity
             android:name="com.roskildeapp.MapActivity"
-            android:label="@string/title_activity_map" >
+            android:label="Kort" >
         </activity>
         <activity
             android:name="com.roskildeapp.MypageActivity"
-            android:label="@string/title_activity_mypage" >
+            android:label="Min side" >
         </activity>
         <activity
             android:name="com.roskildeapp.FriendRequestActivity"
-            android:label="@string/title_activity_friend_request" >
+            android:label="Venneanmodninger" >
         </activity>
         <activity
             android:name="com.roskildeapp.RoskildeNewsChosenActivity"
-            android:label="@string/title_activity_roskilde_news_chosen" >
+            android:label="Nyheder" >
         </activity>
 
         <meta-data
@@ -87,12 +87,8 @@
             android:value="AIzaSyBhY7UqCA4GsW00y0kyCbmkGtc-ICjzDQ0" />
 
         <activity
-            android:name="com.roskildeapp.RoskildeNewsChosenActivity"
-            android:label="@string/title_activity_roskilde_news_chosen" >
-        </activity>
-        <activity
             android:name="com.roskildeapp.BandDesciptionActivity"
-            android:label="@string/title_activity_band_desciption" >
+            android:label="Band information" >
         </activity>
         <activity
             android:name="com.roskildeapp.FriendProgramActivity"
@@ -100,7 +96,7 @@
         </activity>
         <activity
             android:name="com.roskildeapp.WeatherActivity"
-            android:label="@string/title_activity_weather" >
+            android:label="Vejret" >
         </activity>
         <activity
             android:name="com.roskildeapp.MyPageFragment"
@@ -108,11 +104,11 @@
         </activity>
         <activity
             android:name="com.roskildeapp.CompasActivity"
-            android:label="@string/title_activity_compas" >
+            android:label="Kompas" >
         </activity>
         <activity
             android:name="com.roskildeapp.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="Indstillinger" >
         </activity>
     </application>
 

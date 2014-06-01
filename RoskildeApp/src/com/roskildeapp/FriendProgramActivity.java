@@ -47,6 +47,8 @@ public class FriendProgramActivity extends Activity implements OnItemClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friend_program);
 
+		setTitle(getIntent().getStringExtra("FriendName") + "'s program");
+		
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(settings.getBoolean("skift tema", true)){
