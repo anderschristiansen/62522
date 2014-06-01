@@ -6,6 +6,10 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.roskildeapp.MenuActivity.FetchCoordinates.GpsListener;
+
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,7 +28,7 @@ import android.widget.Toast;
 public class MapActivity extends Activity {
 
 	GoogleMap googleMap;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -40,37 +44,29 @@ public class MapActivity extends Activity {
 	}
 
 	private void initilizeMap() {
+		
+		GpsListener gpsListener;
+		
 		if (googleMap == null) {
 			googleMap = ((MapFragment) getFragmentManager().findFragmentById(R.id.map)).getMap();
 			googleMap.setMyLocationEnabled(true);
 			LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
+			gpsListener = new GpsListener();
+			
 			Criteria criteria = new Criteria(); 
 			String provider = locationManager.getBestProvider(criteria, true);
 
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, gpsListener);
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, gpsListener);
+			
 			// Getting Current Location
-			Location location = locationManager.getLastKnownLocation(provider);
-
+			Location location = locationManager.getLastKnownLocation(provider);	
+			
 			if(location == null){
-				LocationListener locationListener = new LocationListener() {
-
-					@Override
-					public void onLocationChanged(Location location) {
-						double lat= location.getLatitude();
-						double lng = location.getLongitude();
-						LatLng ll = new LatLng(lat, lng);
-						googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));                    
-					}
-					@Override
-					public void onProviderDisabled(String provider) {}
-					@Override
-					public void onProviderEnabled(String provider) {}
-					@Override
-					public void onStatusChanged(String provider, int status,
-							Bundle extras) {}
-				};
+		
 				Log.d("APpln", "location: >>"+location);
-				locationManager.requestLocationUpdates(provider, 20000, 0, locationListener);
+				locationManager.requestLocationUpdates(provider, 20000, 0, gpsListener);
 
 			}else{
 				double lat= location.getLatitude();
@@ -79,53 +75,54 @@ public class MapActivity extends Activity {
 				LatLng ll = new LatLng(lat, lng);
 
 				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));
-			}
+				
+				this.googleMap.addMarker(new MarkerOptions().position(new LatLng(55.75571805, 12.52080712)).title("userName").snippet("createdTime"));
+			}  
 
-
-			// Define a listener that responds to location updates
-			LocationListener locationListener = new LocationListener() {
-				public void onLocationChanged(Location location) {
-
-					// Called when a new location is found by the network location provider.
-					makeUseOfNewLocation(location);
-				}
-
-				private void makeUseOfNewLocation(Location location) {
-					double lat = location.getLatitude();
-					double lng = location.getLongitude();
-					LatLng ll = new LatLng(lat, lng);				
-
-//				    Context context = getApplicationContext();
-//				    CharSequence text = "Lokation: \nBreddegrad: " + lat + "\nLængdegrad: " + lng;
-//				    int duration = Toast.LENGTH_SHORT;
-//
-//				    Toast toast = Toast.makeText(context, text, duration);
-//				    toast.show();
-
-				}
-
-				public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-				public void onProviderEnabled(String provider) {}
-
-				public void onProviderDisabled(String provider) {}
-			};
-
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);      
-
-
+			
 			// check if map is created successfully or not
 			if (googleMap == null) {
-				
-				Context context = getApplicationContext();
-			    CharSequence text = "Unable to create maps";
-			    int duration = Toast.LENGTH_SHORT;
 
-			    Toast toast = Toast.makeText(context, text, duration);
-			    toast.show();
+				Context context = getApplicationContext();
+				CharSequence text = "Unable to create maps";
+				int duration = Toast.LENGTH_SHORT;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
 			}
 		}
+		
 	}
+	
+	public class GpsListener implements LocationListener {
+
+		@Override
+		public void onLocationChanged(Location location) {
+			double lat= location.getLatitude();
+			double lng = location.getLongitude();
+			LatLng ll = new LatLng(lat, lng);
+			googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));     				
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			System.out.println("OnProviderDisabled");
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			System.out.println("onProviderEnabled");
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status,
+				Bundle extras) {
+			System.out.println("onStatusChanged");
+
+		}
+	}
+
+
 
 	@Override
 	protected void onResume() {

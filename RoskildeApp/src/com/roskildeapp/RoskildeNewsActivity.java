@@ -48,7 +48,7 @@ public class RoskildeNewsActivity extends Activity implements OnItemClickListene
 		
 		bar = (ProgressBar) findViewById(R.id.pbNews);
 
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("News");
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("news");
 		query.findInBackground(new FindCallback<ParseObject>() {
 			public void done(List<ParseObject> parseNewsList, ParseException e) {
 				if (e == null) {

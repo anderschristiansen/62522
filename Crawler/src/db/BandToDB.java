@@ -49,7 +49,7 @@ public class BandToDB {
 		}		
 	}
 
-	public static boolean SaveBandNames(Band band){		
+	public static boolean SaveBand(Band band){		
 		
 		try {
 			url = new URL("https://api.parse.com/1/classes/bands/");

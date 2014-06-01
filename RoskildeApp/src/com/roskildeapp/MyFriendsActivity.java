@@ -55,7 +55,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<String> userNameOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> nameOfFriendsWhoMadeProgram = new ArrayList<String>();
 	List<Boolean> positionOfFriendsWithProgram = new ArrayList<Boolean>();
-
+	
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -277,7 +277,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		i.putExtra("FriendName", username);
 		startActivity(i);
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

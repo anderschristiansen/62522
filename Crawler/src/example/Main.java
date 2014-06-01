@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import object.Band;
+import object.News;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,9 +18,10 @@ import Helpers.Trim;
 
 public class Main {
 
-	private static ArrayList<String> _urlList = new ArrayList<String>();
+	private static ArrayList<String> _urlBandList = new ArrayList<String>();
+	private static ArrayList<String> _urlNewsList = new ArrayList<String>();
 	private static ArrayList<Band> _bandList = new ArrayList<Band>();
-
+	private static ArrayList<News> _newsList = new ArrayList<News>();
 
 	public static void main(String[] args) throws IOException, ParseException {
 
@@ -35,7 +37,7 @@ public class Main {
 				Element link = e.select("a").first();
 				String relHref = link.attr("href"); 
 
-				_urlList.add(relHref);
+				_urlBandList.add(relHref);
 			}
 
 		} catch (IOException e) {
@@ -45,9 +47,9 @@ public class Main {
 
 
 		//GET BANDS INFO FROM URL'S
-		if (_urlList != null)
+		if (_urlBandList != null)
 		{	
-			for (String url : _urlList) {
+			for (String url : _urlBandList) {
 
 				try {
 
@@ -67,7 +69,7 @@ public class Main {
 
 					//BAND DESCRIPTION					
 					String description = "";
-					
+
 					try {
 						description = bandDoc.select(".description").first().text();
 						//description = Helpers.Filter.StringFilter(description);
@@ -75,13 +77,13 @@ public class Main {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}						
-				
+
 					//BAND DATE AND SCENE					
 					String date = "";
 					String scene = "";
-					
+
 					try {
-						
+
 						String info[] = bandDoc.select(".date").first().text().split("-");
 
 						String strDate = info[0].replaceAll("[^0-9.]", "") + info[1];
@@ -119,25 +121,108 @@ public class Main {
 		}
 
 
-		// PRINT TO CONSOLE
+		//GET URL FOR EVERY NEWS
+		try {
+			Document newsDoc = Jsoup.connect("http://roskilde-festival.dk/dk/nyhed/").userAgent("Chrome").timeout(30000).get();
 
-		//BandUrl();
-		//BandNames();
+			org.jsoup.select.Elements news = newsDoc.select(".container");
+
+			for(Element e : news){
+
+				Element link = e.select("a").first();
+				String relHref = link.attr("href"); 
+
+				_urlNewsList.add(relHref);
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// GET NEWS FROM URL
+		if (_urlNewsList != null)
+		{	
+			for (String url : _urlNewsList) {
+
+				try {
+
+					//------------------------------------------------------------------------------------------------
+					Document newsDoc = Jsoup.connect("http://roskilde-festival.dk/" + url).userAgent("Chrome").timeout(30000).get();
+
+					//NEWS TITLE					
+					String title = "";
+
+					try {
+						title = newsDoc.select(".datacontainer").first().select("h2").text();
+					
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}										
+
+					//NEWS CONTENTS
+					String content = "";
+
+					try {
+						content = newsDoc.select(".bodytext").text();
+						
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}														
+
+
+					//------------------------------------------------------------------------------------------------
+
+					News newNews= new News();
+
+					newNews.setTitle(title);
+					newNews.setContent(content);
+
+					//------------------------------------------------------------------------------------------------
+
+					_newsList.add(newNews);
+
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		// PRINT TO CONSOLE
+		printNewsUrl();
+		printBandUrl();
 
 		SaveToDB();
 	}
 
 
-	private static void BandUrl(){
+	private static void printBandUrl(){
 		System.out.println("");
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println("BAND NAVNE");
 		System.out.println("-----------------------------------------------------------------");
 		System.out.println("");
 
-		for (int i = 0; i < _urlList.size(); i++) {
+		for (int i = 0; i < _urlBandList.size(); i++) {
 
-			System.out.println(_urlList.get(i).toString());
+			System.out.println(_urlBandList.get(i).toString());
+		}
+	}
+
+	private static void printNewsUrl(){
+		System.out.println("");
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("NYHEDER");
+		System.out.println("-----------------------------------------------------------------");
+		System.out.println("");
+
+		for (int i = 0; i < _urlNewsList.size(); i++) {
+
+			System.out.println(_urlNewsList.get(i).toString());
 		}
 	}
 
@@ -149,7 +234,12 @@ public class Main {
 
 		for (Band band : _bandList) {
 
-			db.BandToDB.SaveBandNames(band);
+			db.BandToDB.SaveBand(band);
+		}
+		
+		for (News news : _newsList) {
+
+			db.NewsToDB.SaveNews(news);
 		}
 	}	
 
