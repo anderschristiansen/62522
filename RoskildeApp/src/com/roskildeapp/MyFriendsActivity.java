@@ -1,7 +1,9 @@
 package com.roskildeapp;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.crypto.spec.PSource;
@@ -48,13 +50,17 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	RelativeLayout layout;
 
 	List<String> parseUserIdList = new ArrayList<String>();
-	List<String> parseUserList = new ArrayList<String>();
+	List<ParseUser> parseUserList = new ArrayList<ParseUser>();
+	List<String> parseUserNameList = new ArrayList<String>();
 	List<String> allParseUserList = new ArrayList<String>();
 	List<String> IdOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> friendRequestIds = new ArrayList<String>();
 	List<String> userNameOfFriendsWhoMadeRequest = new ArrayList<String>();
 	List<String> nameOfFriendsWhoMadeProgram = new ArrayList<String>();
 	List<Boolean> positionOfFriendsWithProgram = new ArrayList<Boolean>();
+	List<ParseUser> friendsWhoHaveGPS = new ArrayList<ParseUser>();
+	List<Boolean> positionOfFriendsWithGPS = new ArrayList<Boolean>();
+
 	
 	ParseUser parseUser = new ParseUser();
 
@@ -180,7 +186,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		});		
 	}
 
-	// finder venners brugernavn, for den person der er logget ind
+	// finder venners navn og venners objekter, for den person der er logget ind
 	private void FindUsernames(){
 		Collection<String> userId = parseUserIdList;
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
@@ -189,7 +195,8 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			public void done(List<ParseUser> users, ParseException e) {
 				if (e == null) {
 					for(int i= 0; i < users.size(); i++){
-						parseUserList.add((String) users.get(i).get("username"));
+						parseUserNameList.add((String) users.get(i).get("username"));
+						parseUserList.add(users.get(i));
 					}
 				} else {
 					System.out.println("fejl i FindUsernames()");
@@ -201,7 +208,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 
 	// Finder venner som har oprettet et program
 	private void FindFriendPrograms(){
-		Collection<String> friendNames = parseUserList;
+		Collection<String> friendNames = parseUserNameList;
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("UserProgram");
 		query.whereContainedIn("userName", friendNames);
 		query.findInBackground(new FindCallback<ParseObject>() {
@@ -219,10 +226,10 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 				}
 
 				// Håndterer hvilke venners program der må ses.
-				for(int i = 0; i < parseUserList.size(); i++){
+				for(int i = 0; i < parseUserNameList.size(); i++){
 					boolean answer = false;
 					for(int j = 0; j < nameOfFriendsWhoMadeProgram.size(); j++){
-						if(parseUserList.get(i).equals(nameOfFriendsWhoMadeProgram.get(j))){
+						if(parseUserNameList.get(i).equals(nameOfFriendsWhoMadeProgram.get(j))){
 							positionOfFriendsWithProgram.add(true);
 							j = nameOfFriendsWhoMadeProgram.size();
 							answer = true;
@@ -232,6 +239,34 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 						positionOfFriendsWithProgram.add(false);
 					}
 				}
+				
+				//Håndterer hvilke venners GPS position der må ses
+
+				Calendar calendar =Calendar.getInstance() ;
+				calendar.add(Calendar.HOUR,-1);
+				Date date = calendar.getTime();
+				for(int k = 0; k<parseUserList.size();k++){
+					System.out.println(date + ", " + parseUserList.get(k).getUpdatedAt());
+					if(date.before(parseUserList.get(k).getUpdatedAt())){
+						friendsWhoHaveGPS.add(parseUserList.get(k));
+					}
+				}
+				for(int l = 0; l<parseUserList.size(); l++){
+					boolean answer = false;
+					for(int m = 0; m < friendsWhoHaveGPS.size(); m++){
+						if(parseUserList.get(l).equals(friendsWhoHaveGPS.get(m))){
+							positionOfFriendsWithGPS.add(true);
+							m = friendsWhoHaveGPS.size();
+							answer = true;
+						}
+					}
+					if(!answer){
+						positionOfFriendsWithGPS.add(false);
+					}
+				}
+				
+				System.out.println(positionOfFriendsWithGPS);
+				
 				MakeListView();
 			}	
 		});
@@ -247,10 +282,9 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 			public View getView(final int position, View cachedView, ViewGroup parent) {
 				View view = super.getView(position, cachedView, parent);
 				TextView friendName = (TextView) view.findViewById(R.id.lvTvName);
-				friendName.setText(parseUserList.get(position));
+				friendName.setText(parseUserNameList.get(position));
 				ImageButton friendProgram = (ImageButton) view.findViewById(R.id.ibFprogram);
 				TextView program = (TextView) view.findViewById(R.id.lvTvFriendsProgram);
-				System.out.println(position + "," + positionOfFriendsWithProgram.get(position) + ", " + parseUserList.get(position));
 				if(positionOfFriendsWithProgram.get(position)){
 					friendProgram.setVisibility(0);
 					program.setVisibility(0);
@@ -259,13 +293,33 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 						@Override
 						public void onClick(View v) 
 						{			
-							FriendProgram(parseUserList.get(position));
+							FriendProgram(parseUserNameList.get(position));
 						}
 					});
 				}
 				else{
 					program.setVisibility(8);
 					friendProgram.setVisibility(8);
+				}
+				
+				ImageButton friendMap = (ImageButton) view.findViewById(R.id.ibFmap);
+				TextView map = (TextView) view.findViewById(R.id.lvTvFriendsMap);
+				
+				if(positionOfFriendsWithGPS.get(position)){
+					friendMap.setVisibility(0);
+					map.setVisibility(0);
+					friendMap.setOnClickListener(new OnClickListener()
+					{
+						@Override
+						public void onClick(View v) 
+						{			
+							FriendMap(parseUserList.get(position));
+						}
+					});
+				}
+				else{
+					map.setVisibility(8);
+					friendMap.setVisibility(8);
 				}
 				return view;
 			}
@@ -276,6 +330,16 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 		Intent i = new Intent(this, FriendProgramActivity.class);
 		i.putExtra("FriendName", username);
 		startActivity(i);
+	}
+	private void FriendMap(ParseUser friend) {
+		
+		Intent i = new Intent(this, MapActivity.class);
+		i.putExtra("username", friend.getString("username"));
+		i.putExtra("latitude", friend.getDouble("latitude"));
+		i.putExtra("longitude", friend.getDouble("longitude"));
+		i.putExtra("updated", friend.getUpdatedAt());
+		startActivity(i);
+		
 	}
 	
 	@Override

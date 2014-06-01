@@ -3,26 +3,17 @@ package com.roskildeapp;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.roskildeapp.MenuActivity.FetchCoordinates.GpsListener;
 
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Toast;
 
 public class MapActivity extends Activity {
@@ -34,6 +25,13 @@ public class MapActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
+		String username = getIntent().getStringExtra("username");
+		double latitude = getIntent().getDoubleExtra("latitude", 0);
+		double longitude = getIntent().getDoubleExtra("longitude", 0);
+		String date = getIntent().getStringExtra("updated");
+		
+		System.out.println("username: " + username + ", latitude: " + latitude + ", longitude; " + longitude + ", date: " + date);
+		
 		try {
 			// Loading map
 			initilizeMap();
