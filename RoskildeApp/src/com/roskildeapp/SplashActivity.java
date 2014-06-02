@@ -20,6 +20,7 @@ public class SplashActivity extends Activity  implements Runnable {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
 		Parse.initialize(this, "1PZGZUbJ7AyTkIZTOwMfXxdFRpkbJwo0MoB4J6im", "rkXj2TIHo48jhTXSX9YQthqXYseSSWzUBGT2HoqF");
+		PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 		
 		System.out.println(getClass().getSimpleName() + ": aktiviteten blev startet!");
 
