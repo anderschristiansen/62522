@@ -22,6 +22,7 @@ import com.parse.ParseUser;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.ClipData.Item;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -62,8 +63,7 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	List<Boolean> positionOfFriendsWithProgram = new ArrayList<Boolean>();
 	List<ParseUser> friendsWhoHaveGPS = new ArrayList<ParseUser>();
 	List<Boolean> positionOfFriendsWithGPS = new ArrayList<Boolean>();
-
-
+	
 	ParseUser parseUser = new ParseUser();
 
 	@Override
@@ -352,6 +352,8 @@ public class MyFriendsActivity extends Activity implements OnClickListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.my_friends, menu);
+		
+		
 		return true;
 	}
 
