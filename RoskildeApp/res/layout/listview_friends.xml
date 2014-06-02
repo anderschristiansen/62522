@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/transparent"
-            android:src="@android:drawable/ic_menu_agenda" />
+            android:src="@drawable/program2" />
 
         <TextView
             android:id="@+id/lvTvFriendsProgram"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/transparent"
-            android:src="@android:drawable/ic_dialog_map" />
+            android:src="@drawable/map2" />
 
         <TextView
             android:id="@+id/lvTvFriendsMap"
