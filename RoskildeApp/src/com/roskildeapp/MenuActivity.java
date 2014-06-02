@@ -35,7 +35,7 @@ import android.widget.TextView;
 public class MenuActivity extends Activity implements OnClickListener {
 	LinearLayout program, friends, news, map, myPage, gps, weather, compas;
 	TextView gpsText;
-	
+
 	Location location;
 	LocationManager locationManager;
 	FetchCoordinates asyncTask;
@@ -47,7 +47,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 
 		setTitle(ParseUser.getCurrentUser().getUsername());
 		setTitleColor(Color.BLUE);
-		
+
 		SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if(settings.getBoolean("skift tema", true)){
@@ -260,7 +260,12 @@ public class MenuActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if(item.getItemId() == R.id.menuSignOut){
-			asyncTask.cancel(true);
+
+			if (asyncTask != null)
+			{
+				asyncTask.cancel(true);
+			}
+
 			ParseUser.logOut();
 			startActivity(new Intent(this,LoginActivity.class));
 			finish();
