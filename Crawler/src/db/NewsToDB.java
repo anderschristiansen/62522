@@ -33,7 +33,10 @@ public class NewsToDB {
 			conn.setRequestProperty("Content-type", "application/json");			
 			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream(), "UTF-8");						
 
-			String body = "{\"title\": " + "\"" + news.getTitle() + "\", " + "\"content\": " + "\"" + news.getContent() + "\"" + "}";
+			String temp = news.getContent();
+			temp = temp.replace("\"", "\\\"");
+			
+			String body = "{\"title\": " + "\"" + news.getTitle() + "\", " + "\"content\": " + "\"" + temp + "\"" + "}";
 
 			out.write(body);
 
